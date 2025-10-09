@@ -14,6 +14,8 @@ import PlayerStatisticsPage from '@/components/pages/PlayerStatisticsPage'
 export default function Home() {
   const [currentPage, setCurrentPage] = useState<'players' | 'random' | 'captain' | 'wheel' | 'history' | 'stats'>('players')
   const [players, setPlayers] = useState<Player[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [apiError, setApiError] = useState<string | null>(null)
 
   // Load initial data
   useEffect(() => {
@@ -22,12 +24,19 @@ export default function Home() {
 
   const loadPlayers = async () => {
     try {
+      setIsLoading(true)
+      setApiError(null)
       const response = await api.getPlayers()
       if (response.success) {
         setPlayers(response.data)
       }
     } catch (error) {
       console.error('Failed to load players:', error)
+      setApiError(error instanceof Error ? error.message : 'Failed to connect to backend')
+      // Continue with empty players array for demo
+      setPlayers([])
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -54,6 +63,20 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* API Error Banner */}
+      {apiError && (
+        <div className="max-w-7xl mx-auto px-6 pt-6">
+          <div className="bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-4">
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+              <p className="text-yellow-300 text-sm">
+                Demo Mode: Backend not connected. You can still explore the interface!
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Navigation */}
       <div className="max-w-7xl mx-auto p-6">
