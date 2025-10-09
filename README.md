@@ -142,7 +142,50 @@ npm run build
 npm run start
 ```
 
-## 🎨 Customization
+## � Cloud Deployment
+
+Deploy your app to the cloud so friends can access it from anywhere!
+
+### Quick Deploy Guide
+```bash
+./deploy-guide.sh
+```
+
+### Recommended Platforms
+
+#### 1. **Vercel** (Easiest for Next.js)
+- ✅ **FREE** for personal projects
+- ✅ Automatic deployments from GitHub
+- ✅ Perfect for Next.js apps
+
+1. Sign up at [vercel.com](https://vercel.com)
+2. Connect your GitHub repository
+3. Import this project
+4. Deploy with one click!
+
+#### 2. **Railway** (Best for Full-Stack)
+- ✅ **FREE** $5/month credit
+- ✅ Includes database hosting
+- ✅ Auto-deploy from GitHub
+
+1. Sign up at [railway.app](https://railway.app)
+2. Create new project from GitHub
+3. Select this repository
+4. Railway reads `railway.yaml` automatically
+
+#### 3. **Render** (Great Alternative)
+- ✅ **FREE** tier available
+- ✅ Easy configuration
+- ✅ Supports multiple services
+
+1. Sign up at [render.com](https://render.com)
+2. Create Blueprint from GitHub
+3. Render reads `render.yaml` automatically
+
+### After Deployment
+Share the deployed URL with your friends - they can access the app from any device with an internet connection!
+
+## �🎨 Customization
 
 ### Adding New Champions
 Edit `backend/src/data/champions.json` to add or modify champions.

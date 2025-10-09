@@ -1,0 +1,20 @@
+version: 2
+services:
+  backend:
+    build:
+      commands:
+        - cd backend && npm install && npm run build
+    start: cd backend && npm start
+    variables:
+      NODE_ENV: production
+      PORT: 3001
+  
+  frontend:
+    build:
+      commands:
+        - cd frontend && npm install && npm run build
+    start: cd frontend && npm start
+    variables:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: ${{ backend.RAILWAY_PUBLIC_DOMAIN }}
