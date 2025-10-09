@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://localhost:3001'
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
 export interface Player {
   id: string
@@ -60,6 +60,8 @@ export interface OverviewStats {
 }
 
 class ApiService {
+  private isBackendAvailable = true
+
   private async request<T>(
     endpoint: string,
     options: RequestInit = {}
@@ -85,7 +87,13 @@ class ApiService {
       return await response.json()
     } catch (error) {
       console.error('API request failed:', error)
-      // Return a default error response that matches the expected interface
+      this.isBackendAvailable = false
+      
+      // Return mock data for development/demo purposes
+      if (endpoint === '/api/players') {
+        return { success: true, data: [], count: 0 } as T
+      }
+      
       throw new Error(error instanceof Error ? error.message : 'Unknown API error')
     }
   }
