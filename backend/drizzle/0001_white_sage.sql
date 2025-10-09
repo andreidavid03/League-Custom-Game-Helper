@@ -1,0 +1,1 @@
+ALTER TABLE `matches` ADD `opgg_score` text;

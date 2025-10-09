@@ -1,0 +1,119 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:LoLCustomGameHelper.ViewModels"
+             x:Class="LoLCustomGameHelper.Views.WheelView"
+             x:DataType="vm:WheelViewModel">
+
+    <Border Classes="card">
+        <StackPanel>
+            <TextBlock Text="🎡 Wheel of Fortune" Classes="header" TextAlignment="Center"/>
+            
+            <!-- Wheel Container -->
+            <Border Width="300" Height="300" Classes="wheel" HorizontalAlignment="Center" Margin="0,20">
+                <Canvas>
+                    <!-- Wheel Background -->
+                    <Ellipse Width="280" Height="280" Fill="{DynamicResource LoLCardBackground}" 
+                             Stroke="{DynamicResource LoLGold}" StrokeThickness="4"
+                             Canvas.Left="10" Canvas.Top="10"/>
+                    
+                    <!-- Wheel Pointer -->
+                    <Polygon Points="150,5 160,25 140,25" Fill="{DynamicResource LoLGold}" 
+                             Canvas.Left="0" Canvas.Top="0"/>
+                    
+                    <!-- Wheel Content -->
+                    <Grid Width="280" Height="280" Canvas.Left="10" Canvas.Top="10">
+                        <Grid.RenderTransform>
+                            <RotateTransform Angle="{Binding WheelRotation}" 
+                                           CenterX="140" CenterY="140"/>
+                        </Grid.RenderTransform>
+                        
+                        <!-- Wheel Segments (simplified visualization) -->
+                        <ItemsControl ItemsSource="{Binding WheelOptions}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <Canvas/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{DynamicResource LoLDarkBlue}" 
+                                            BorderBrush="{DynamicResource LoLGold}" 
+                                            BorderThickness="1"
+                                            Width="120" Height="30"
+                                            CornerRadius="15">
+                                        <TextBlock Text="{Binding}" 
+                                                  HorizontalAlignment="Center" 
+                                                  VerticalAlignment="Center"
+                                                  Foreground="{DynamicResource LoLAccent}"
+                                                  FontSize="12"/>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Canvas>
+            </Border>
+            
+            <!-- Controls -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20">
+                <Button Content="🎯 SPIN!" 
+                        Command="{Binding SpinCommand}" 
+                        Classes="primary"
+                        FontSize="18"
+                        FontWeight="Bold"
+                        Padding="20,10"
+                        IsEnabled="{Binding !IsSpinning}"/>
+                
+                <TextBlock Text="Spinning..." 
+                          Classes="subheader" 
+                          VerticalAlignment="Center" 
+                          Margin="20,0,0,0"
+                          IsVisible="{Binding IsSpinning}"/>
+            </StackPanel>
+            
+            <!-- Result Display -->
+            <Border Classes="card" 
+                    Margin="0,20,0,0" 
+                    Background="{DynamicResource LoLGold}"
+                    IsVisible="{Binding SelectedResult, Converter={x:Static StringConverters.IsNotNullOrEmpty}}">
+                <StackPanel>
+                    <TextBlock Text="🎉 RESULT 🎉" 
+                              Classes="subheader" 
+                              TextAlignment="Center"
+                              Foreground="{DynamicResource LoLDarkBlue}"/>
+                    <TextBlock Text="{Binding SelectedResult}" 
+                              Classes="header" 
+                              TextAlignment="Center"
+                              Foreground="{DynamicResource LoLDarkBlue}"
+                              FontSize="28"/>
+                </StackPanel>
+            </Border>
+            
+            <!-- Wheel Options Display -->
+            <Border Classes="card" Margin="0,20,0,0">
+                <StackPanel>
+                    <TextBlock Text="Options:" Classes="subheader"/>
+                    <ItemsControl ItemsSource="{Binding WheelOptions}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Classes="card" 
+                                        Background="{DynamicResource LoLDarkBlue}" 
+                                        Margin="4,2"
+                                        Padding="8,4">
+                                    <TextBlock Text="{Binding}" 
+                                              FontSize="12" 
+                                              Foreground="{DynamicResource LoLAccent}"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,0 +1,73 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "install-all",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "install:all"],
+            "group": "build",
+            "detail": "Install all dependencies for frontend and backend"
+        },
+        {
+            "label": "dev",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "dev"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Start both frontend and backend development servers"
+        },
+        {
+            "label": "dev-frontend",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "dev:frontend"],
+            "group": "build",
+            "detail": "Start frontend development server only"
+        },
+        {
+            "label": "dev-backend",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "dev:backend"],
+            "group": "build",
+            "detail": "Start backend development server only"
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "build"],
+            "group": "build",
+            "detail": "Build both frontend and backend for production"
+        },
+        {
+            "label": "build-frontend",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "build:frontend"],
+            "group": "build",
+            "detail": "Build frontend for production"
+        },
+        {
+            "label": "build-backend",
+            "type": "shell",
+            "command": "npm",
+            "args": ["run", "build:backend"],
+            "group": "build",
+            "detail": "Build backend for production"
+        },
+        {
+            "label": "start",
+            "type": "shell",
+            "command": "npm",
+            "args": ["start"],
+            "group": "build",
+            "dependsOn": "build",
+            "detail": "Start production servers"
+        }
+    ]
+}

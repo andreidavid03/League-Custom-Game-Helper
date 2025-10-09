@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="128" cy="128" r="120" fill="#010A13" stroke="#C89B3C" stroke-width="8"/>
+  
+  <!-- Inner Ring -->
+  <circle cx="128" cy="128" r="90" fill="none" stroke="#463714" stroke-width="4"/>
+  
+  <!-- Crossed Swords -->
+  <g transform="translate(128,128)">
+    <!-- Sword 1 -->
+    <g transform="rotate(-45)">
+      <rect x="-3" y="-60" width="6" height="120" fill="#C89B3C"/>
+      <polygon points="-8,-70 0,-85 8,-70" fill="#F0E6D2"/>
+      <rect x="-12" y="50" width="24" height="12" fill="#463714"/>
+      <circle cx="0" cy="65" r="8" fill="#C89B3C"/>
+    </g>
+    
+    <!-- Sword 2 -->
+    <g transform="rotate(45)">
+      <rect x="-3" y="-60" width="6" height="120" fill="#C89B3C"/>
+      <polygon points="-8,-70 0,-85 8,-70" fill="#F0E6D2"/>
+      <rect x="-12" y="50" width="24" height="12" fill="#463714"/>
+      <circle cx="0" cy="65" r="8" fill="#C89B3C"/>
+    </g>
+  </g>
+  
+  <!-- Central Emblem -->
+  <circle cx="128" cy="128" r="25" fill="#C89B3C"/>
+  <circle cx="128" cy="128" r="18" fill="#010A13"/>
+  <text x="128" y="138" font-family="Arial Black" font-size="20" font-weight="bold" text-anchor="middle" fill="#C89B3C">L</text>
+  
+  <!-- Outer Decorative Elements -->
+  <g transform="translate(128,128)">
+    <circle cx="0" cy="-100" r="6" fill="#C89B3C"/>
+    <circle cx="70" cy="-70" r="4" fill="#F0E6D2"/>
+    <circle cx="100" cy="0" r="6" fill="#C89B3C"/>
+    <circle cx="70" cy="70" r="4" fill="#F0E6D2"/>
+    <circle cx="0" cy="100" r="6" fill="#C89B3C"/>
+    <circle cx="-70" cy="70" r="4" fill="#F0E6D2"/>
+    <circle cx="-100" cy="0" r="6" fill="#C89B3C"/>
+    <circle cx="-70" cy="-70" r="4" fill="#F0E6D2"/>
+  </g>
+</svg>

@@ -1,0 +1,1043 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:LoLCustomGameHelper.ViewModels"
+        xmlns:models="using:LoLCustomGameHelper.Models"
+        x:Class="LoLCustomGameHelper.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="LoL Custom Game Helper by David Demon"
+        Width="1200" Height="800"
+        MinWidth="800" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="#0F1419">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="TabItem">
+            <Setter Property="Background" Value="#1E2328"/>
+            <Setter Property="Foreground" Value="#F0E6D2"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Padding" Value="15,8"/>
+        </Style>
+        <Style Selector="TabItem:selected">
+            <Setter Property="Background" Value="#C89B3C"/>
+            <Setter Property="Foreground" Value="#0F1419"/>
+        </Style>
+        <Style Selector="Button.lol-primary">
+            <Setter Property="Background" Value="#C89B3C"/>
+            <Setter Property="Foreground" Value="#0F1419"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+        </Style>
+        <Style Selector="Button.lol-secondary">
+            <Setter Property="Background" Value="#463714"/>
+            <Setter Property="Foreground" Value="#F0E6D2"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="BorderBrush" Value="#C89B3C"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+        </Style>
+        <Style Selector="Button.blue-team">
+            <Setter Property="Background" Value="#0596AA"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+        <Style Selector="Button.red-team">
+            <Setter Property="Background" Value="#C8AA6E"/>
+            <Setter Property="Foreground" Value="#0F1419"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#1E2328" BorderBrush="#C89B3C" BorderThickness="0,0,0,3" Padding="20">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                <Image Source="/Assets/icon.png" Width="50" Height="50"/>
+                <TextBlock Text="⚔️ LoL Custom Game Helper by David Demon ⚔️" 
+                           FontSize="28" FontWeight="Bold" 
+                           Foreground="#C89B3C" 
+                           VerticalAlignment="Center"/>
+                <Image Source="/Assets/icon.png" Width="50" Height="50"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Main Content -->
+        <TabControl Grid.Row="1" Background="#0F1419">
+            
+            <!-- Players Tab -->
+            <TabItem Header="👥 Players">
+                <Border Background="#0F1419" Padding="25">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Add Player Section -->
+                        <Border Grid.Row="0" Background="#1E2328" BorderBrush="#C89B3C" BorderThickness="2" 
+                                CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                            <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                                <TextBox Name="PlayerNameInput" 
+                                         Watermark="Enter player name..." 
+                                         Width="300"
+                                         Height="40"
+                                         Background="#0F1419"
+                                         Foreground="#F0E6D2"
+                                         BorderBrush="#C89B3C"
+                                         BorderThickness="2"
+                                         CornerRadius="5"
+                                         FontSize="14"
+                                         Padding="10"
+                                         KeyDown="PlayerNameInput_KeyDown"/>
+                                <Button Name="AddPlayerBtn" 
+                                        Content="➕ Add Player" 
+                                        Height="40"
+                                        Classes="lol-primary"
+                                        FontSize="14"
+                                        Click="AddPlayer_Click"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Player Management -->
+                        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15" Margin="0,15">
+                            <Button Name="SelectAllBtn" 
+                                    Content="✅ Select All Players" 
+                                    Classes="lol-secondary"
+                                    FontSize="12"
+                                    Padding="15,8"
+                                    Click="SelectAll_Click"/>
+                            <Button Name="ClearSelectionBtn" 
+                                    Content="❌ Clear Selection" 
+                                    Classes="lol-secondary"
+                                    FontSize="12"
+                                    Padding="15,8"
+                                    Click="ClearSelection_Click"/>
+                        </StackPanel>
+
+                        <!-- Player Count -->
+                        <TextBlock Grid.Row="2" 
+                                   Text="{Binding Players.Count, StringFormat='Total Players: {0}'}"
+                                   FontSize="16"
+                                   FontWeight="Bold"
+                                   Foreground="#C89B3C"
+                                   HorizontalAlignment="Center"
+                                   Margin="0,0,0,15"/>
+
+                        <!-- Players List -->
+                        <Border Grid.Row="3" 
+                                Background="#1E2328"
+                                BorderBrush="#C89B3C" 
+                                BorderThickness="2" 
+                                CornerRadius="8"
+                                MaxHeight="400">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="15">
+                                <ItemsControl Name="PlayersListBox" 
+                                             ItemsSource="{Binding Players}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#463714" 
+                                                    BorderBrush="#C89B3C" 
+                                                    BorderThickness="1" 
+                                                    CornerRadius="5" 
+                                                    Margin="0,3" 
+                                                    Padding="15,8">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <CheckBox Grid.Column="0" 
+                                                              Content="{Binding Name}" 
+                                                              IsChecked="{Binding IsSelected}"
+                                                              FontSize="14"
+                                                              FontWeight="Bold"
+                                                              Foreground="#F0E6D2"/>
+                                                    
+                                                    <Button Grid.Column="1" 
+                                                            Content="❌" 
+                                                            Background="#722F37"
+                                                            Foreground="White"
+                                                            Width="35" Height="30"
+                                                            CornerRadius="5"
+                                                            FontWeight="Bold"
+                                                            Click="RemovePlayer_Click"
+                                                            Tag="{Binding}"/>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+                    </Grid>
+                </Border>
+            </TabItem>
+
+            <!-- 5v5 Custom Tab -->
+            <TabItem Header="⚔️ 5v5 Custom">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="#0F1419" Padding="25">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/> <!-- Wheel Display -->
+                                <RowDefinition Height="Auto"/> <!-- Game Mode Selection -->
+                                <RowDefinition Height="Auto"/> <!-- Game Controls -->
+                                <RowDefinition Height="*"/>    <!-- Teams -->
+                            </Grid.RowDefinitions>
+
+                        <!-- Wheel Display (positioned above everything) -->
+                        <StackPanel Grid.Row="0" Name="WheelDisplay" IsVisible="False" HorizontalAlignment="Center" Margin="0,0,0,30">
+                            <TextBlock Text="🎡 WHEEL OF FORTUNE" 
+                                       Foreground="#C89B3C" 
+                                       FontWeight="Bold"
+                                       FontSize="28"
+                                       HorizontalAlignment="Center"
+                                       Margin="0,0,0,25"/>
+                            
+                            <!-- Wheel Container -->
+                            <Grid Width="450" Height="450" HorizontalAlignment="Center">
+                                <!-- Outer Glow Effect -->
+                                <Border Background="Transparent" 
+                                        BorderBrush="#C89B3C" 
+                                        BorderThickness="3" 
+                                        CornerRadius="225" 
+                                        Width="450" 
+                                        Height="450"
+                                        Opacity="0.4"/>
+                                
+                                <!-- Main Wheel Background -->
+                                <Border Background="#1E2328" 
+                                        BorderBrush="#C89B3C" 
+                                        BorderThickness="6" 
+                                        CornerRadius="215" 
+                                        Width="430" 
+                                        Height="430"
+                                        Name="WheelBorder">
+                                    <Canvas Name="WheelCanvas" 
+                                            Width="430" 
+                                            Height="430"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            RenderTransformOrigin="0.5,0.5">
+                                        
+                                        <!-- Wheel Background Circle with Gradient -->
+                                        <Ellipse Width="410" Height="410" 
+                                                 Canvas.Left="10" Canvas.Top="10">
+                                            <Ellipse.Fill>
+                                                <RadialGradientBrush Center="0.5,0.5">
+                                                    <GradientStop Color="#463714" Offset="0"/>
+                                                    <GradientStop Color="#2A1F0A" Offset="0.8"/>
+                                                    <GradientStop Color="#1A1408" Offset="1"/>
+                                                </RadialGradientBrush>
+                                            </Ellipse.Fill>
+                                            <Ellipse.Stroke>
+                                                <SolidColorBrush Color="#C89B3C"/>
+                                            </Ellipse.Stroke>
+                                            <Ellipse.StrokeThickness>4</Ellipse.StrokeThickness>
+                                        </Ellipse>
+                                        
+                                        <!-- Division Lines Canvas (will be added dynamically) -->
+                                        <Canvas Name="WheelDivisionsCanvas" 
+                                                Width="430" 
+                                                Height="430"
+                                                ClipToBounds="True"/>
+                                        
+                                        <!-- Center Circle with Glow -->
+                                        <Ellipse Width="100" Height="100" 
+                                                 Canvas.Left="165" Canvas.Top="165"
+                                                 Fill="#C89B3C" 
+                                                 Stroke="#F0E6D2" 
+                                                 StrokeThickness="5"/>
+                                        
+                                        <!-- Center Spinning Icon -->
+                                        <TextBlock Name="WheelSpinText"
+                                                   Text="🎯" 
+                                                   Canvas.Left="200" Canvas.Top="200"
+                                                   FontSize="36"
+                                                   Foreground="#0F1419"
+                                                   FontWeight="Bold"/>
+                                        
+                                        <!-- Player Names around the wheel -->
+                                        <Canvas Name="WheelPlayersCanvas" 
+                                                Width="430" 
+                                                Height="430"
+                                                ClipToBounds="True"/>
+                                    </Canvas>
+                                </Border>
+                                
+                                <!-- Fixed Pointer (outside the rotating wheel) -->
+                                <Polygon Name="WheelPointer"
+                                         Points="225,5 245,35 205,35" 
+                                         Fill="#F0E6D2" 
+                                         Stroke="#C89B3C" 
+                                         StrokeThickness="4"/>
+                            </Grid>
+                            
+                            <!-- Wheel Status -->
+                            <Border Background="#1E2328" 
+                                    BorderBrush="#C89B3C" 
+                                    BorderThickness="3" 
+                                    CornerRadius="10" 
+                                    Padding="20,15"
+                                    Margin="0,25,0,0"
+                                    MaxWidth="600">
+                                <StackPanel Spacing="15">
+                                    <TextBlock Text="� Wheel of Names - LoL Edition" 
+                                               Foreground="#F0E6D2" 
+                                               FontSize="18"
+                                               FontWeight="Bold"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Name="WheelCurrentPlayer" 
+                                               Text="Ready to spin!" 
+                                               Foreground="#C89B3C" 
+                                               FontWeight="Bold"
+                                               FontSize="16"
+                                               HorizontalAlignment="Center"
+                                               TextWrapping="Wrap"/>
+                                    
+                                    <!-- Spin Button -->
+                                    <Button Name="SpinWheelBtn" 
+                                            Content="🎡 SPIN THE WHEEL!" 
+                                            Classes="lol-primary"
+                                            FontSize="18"
+                                            Padding="30,15"
+                                            HorizontalAlignment="Center"
+                                            Margin="0,10,0,0"
+                                            Click="SpinWheel_Click"/>
+                                    
+                                    <!-- Result Display -->
+                                    <Border Name="WheelResultDisplay" 
+                                            Background="#463714" 
+                                            BorderBrush="#C89B3C" 
+                                            BorderThickness="2" 
+                                            CornerRadius="8" 
+                                            Padding="15"
+                                            IsVisible="False">
+                                        <StackPanel Spacing="8">
+                                            <TextBlock Text="🎉 WINNER!" 
+                                                       Foreground="#C89B3C" 
+                                                       FontSize="16"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"/>
+                                            <TextBlock Name="WheelWinnerText" 
+                                                       Text="" 
+                                                       Foreground="#F0E6D2" 
+                                                       FontSize="20"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+
+                        <!-- Game Mode Selection -->
+                        <Border Grid.Row="1" Background="#1E2328" BorderBrush="#C89B3C" BorderThickness="2" 
+                                CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                            <StackPanel Spacing="15">
+                                <TextBlock Text="🎮 Select Game Mode" 
+                                           FontSize="18" FontWeight="Bold" 
+                                           Foreground="#C89B3C" 
+                                           HorizontalAlignment="Center"/>
+                                
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="20">
+                                    <RadioButton Name="RandomModeRadio" Content="🎲 Random Teams" 
+                                               IsChecked="True" GroupName="GameMode"
+                                               Foreground="#F0E6D2" FontSize="14" FontWeight="Bold"
+                                               Checked="OnGameModeChanged"/>
+                                    <RadioButton Name="CaptainModeRadio" Content="👑 Captains Draft" 
+                                               GroupName="GameMode"
+                                               Foreground="#F0E6D2" FontSize="14" FontWeight="Bold"
+                                               Checked="OnGameModeChanged"/>
+                                    <RadioButton Name="WheelModeRadio" Content="🎡 Wheel Spinner" 
+                                               GroupName="GameMode"
+                                               Foreground="#F0E6D2" FontSize="14" FontWeight="Bold"
+                                               Checked="OnGameModeChanged"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Game Controls & Role Management -->
+                        <Border Grid.Row="2" Background="#1E2328" BorderBrush="#C89B3C" BorderThickness="2" 
+                                CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                            <StackPanel Spacing="20">
+                                
+                                <!-- Random Teams Controls -->
+                                <StackPanel Name="RandomControls" IsVisible="True" Spacing="15">
+                                    <TextBlock Text="🎲 Random Teams Setup" 
+                                               FontSize="16" FontWeight="Bold" 
+                                               Foreground="#C89B3C" 
+                                               HorizontalAlignment="Center"/>
+                                    
+                                    <CheckBox Name="AssignRandomRolesCheckBox" 
+                                              Content="⚔️ Assign Random Roles (Top, Jungle, Mid, ADC, Support)" 
+                                              Foreground="#F0E6D2" 
+                                              FontSize="14"
+                                              HorizontalAlignment="Center"/>
+                                    
+                                    <Button Name="StartRandomGameBtn" 
+                                            Content="🎮 Create Random Teams" 
+                                            Classes="lol-primary"
+                                            FontSize="16"
+                                            Padding="25,12"
+                                            HorizontalAlignment="Center"
+                                            Click="StartRandomGame_Click"/>
+                                </StackPanel>
+
+                                <!-- Captain Mode Controls -->
+                                <StackPanel Name="CaptainControls" IsVisible="False" Spacing="20">
+                                    <TextBlock Text="👑 Captain Draft Mode" 
+                                               FontSize="18" FontWeight="Bold" 
+                                               Foreground="#C89B3C" 
+                                               HorizontalAlignment="Center"/>
+                                    
+                                    <!-- Step Indicator -->
+                                    <Border Background="#1E2328" BorderBrush="#C89B3C" BorderThickness="2" CornerRadius="8" Padding="15">
+                                        <StackPanel Spacing="10">
+                                            <TextBlock Name="CaptainStepIndicator" 
+                                                       Text="📋 Step 1: Select 10 players, then choose captains below"
+                                                       Foreground="#F0E6D2" 
+                                                       FontSize="14"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Border>
+                                    
+                                    <!-- Captain Selection -->
+                                    <Border Name="CaptainSelectionPanel" Background="#463714" BorderBrush="#C89B3C" BorderThickness="2" CornerRadius="8" Padding="20">
+                                        <StackPanel Spacing="15">
+                                            <TextBlock Text="� Choose Your Captains" 
+                                                       Foreground="#F0E6D2" 
+                                                       FontWeight="Bold"
+                                                       FontSize="16"
+                                                       HorizontalAlignment="Center"/>
+                                            
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="40"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <!-- Blue Captain -->
+                                                <StackPanel Grid.Column="0" Spacing="8">
+                                                    <TextBlock Text="🛡️ BLUE CAPTAIN" 
+                                                               Foreground="#60a5fa" 
+                                                               FontSize="14" 
+                                                               FontWeight="Bold" 
+                                                               HorizontalAlignment="Center"/>
+                                                    <ComboBox Name="BlueCaptainCombo" 
+                                                              PlaceholderText="Select Blue Captain"
+                                                              Width="200"
+                                                              Height="40"
+                                                              Background="#0F1419"
+                                                              Foreground="#F0E6D2"
+                                                              BorderBrush="#60a5fa"
+                                                              BorderThickness="3"
+                                                              FontSize="14"
+                                                              FontWeight="Bold"/>
+                                                </StackPanel>
+                                                
+                                                <!-- VS -->
+                                                <TextBlock Grid.Column="1" 
+                                                           Text="VS" 
+                                                           Foreground="#C89B3C" 
+                                                           FontSize="16" 
+                                                           FontWeight="Bold" 
+                                                           HorizontalAlignment="Center"
+                                                           VerticalAlignment="Center"/>
+                                                
+                                                <!-- Red Captain -->
+                                                <StackPanel Grid.Column="2" Spacing="8">
+                                                    <TextBlock Text="⚔️ RED CAPTAIN" 
+                                                               Foreground="#f87171" 
+                                                               FontSize="14" 
+                                                               FontWeight="Bold" 
+                                                               HorizontalAlignment="Center"/>
+                                                    <ComboBox Name="RedCaptainCombo" 
+                                                              PlaceholderText="Select Red Captain"
+                                                              Width="200"
+                                                              Height="40"
+                                                              Background="#0F1419"
+                                                              Foreground="#F0E6D2"
+                                                              BorderBrush="#f87171"
+                                                              BorderThickness="3"
+                                                              FontSize="14"
+                                                              FontWeight="Bold"/>
+                                                </StackPanel>
+                                            </Grid>
+                                            
+                                            <Button Name="SetCaptainsBtn" 
+                                                    Content="⚡ START CAPTAIN DRAFT" 
+                                                    Classes="lol-primary"
+                                                    FontSize="16"
+                                                    Padding="30,12"
+                                                    HorizontalAlignment="Center"
+                                                    Click="SetCaptains_Click"/>
+                                        </StackPanel>
+                                    </Border>
+                                </StackPanel>
+                                
+                                <!-- Draft Panel (outside captain controls) -->
+                                <Border Name="DraftPanel" Background="#463714" BorderBrush="#C89B3C" BorderThickness="1" CornerRadius="5" Padding="15" IsVisible="False" Margin="0,20,0,0">
+                                        <StackPanel Spacing="15">
+                                            <TextBlock Text="Step 2: Assign Players to Teams" 
+                                                       Foreground="#F0E6D2" 
+                                                       FontWeight="Bold"
+                                                       FontSize="14"
+                                                       HorizontalAlignment="Center"/>
+                                            
+                                            <TextBlock Name="DraftStatusText" 
+                                                       Text="Captains set! Now assign the remaining players to their teams."
+                                                       Foreground="#C89B3C" 
+                                                       FontSize="12"
+                                                       FontWeight="Bold"
+                                                       HorizontalAlignment="Center"/>
+                                            
+                                            <!-- Simplified Player Assignment -->
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="200"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                
+                                                <!-- Available Players -->
+                                                <StackPanel Grid.Column="0">
+                                                    <TextBlock Text="Available Players" 
+                                                               Foreground="#F0E6D2" 
+                                                               FontWeight="Bold"
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"
+                                                               Margin="0,0,0,10"/>
+                                                    <Border Background="#0F1419" BorderBrush="#C89B3C" BorderThickness="1" CornerRadius="5" Padding="10" MaxHeight="200">
+                                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                                            <ItemsControl Name="AvailablePlayersForDraft">
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate x:DataType="models:Player">
+                                                                        <Border Background="#1E2328" 
+                                                                                BorderBrush="#463714" 
+                                                                                BorderThickness="1" 
+                                                                                CornerRadius="3" 
+                                                                                Margin="2" 
+                                                                                Padding="8,5">
+                                                                            <TextBlock Text="{Binding Name}" 
+                                                                                       Foreground="#F0E6D2" 
+                                                                                       FontWeight="Bold"
+                                                                                       HorizontalAlignment="Center"/>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </ScrollViewer>
+                                                    </Border>
+                                                </StackPanel>
+                                                
+                                                <!-- Assignment Controls -->
+                                                <StackPanel Grid.Column="1" VerticalAlignment="Center" Spacing="15">
+                                                    <ComboBox Name="PlayerToAssignCombo" 
+                                                              PlaceholderText="Select Player"
+                                                              Width="180"
+                                                              Height="35"
+                                                              Background="#0F1419"
+                                                              Foreground="#F0E6D2"
+                                                              BorderBrush="#C89B3C"
+                                                              BorderThickness="2"/>
+                                                    
+                                                    <StackPanel Spacing="8">
+                                                        <Button Name="AssignToBlueBtn" 
+                                                                Content="→ Blue Team" 
+                                                                Background="#2563eb"
+                                                                Foreground="White"
+                                                                FontWeight="Bold"
+                                                                Width="140"
+                                                                Height="30"
+                                                                CornerRadius="5"
+                                                                Click="AssignToBlue_Click"/>
+                                                        <Button Name="AssignToRedBtn" 
+                                                                Content="→ Red Team" 
+                                                                Background="#dc2626"
+                                                                Foreground="White"
+                                                                FontWeight="Bold"
+                                                                Width="140"
+                                                                Height="30"
+                                                                CornerRadius="5"
+                                                                Click="AssignToRed_Click"/>
+                                                    </StackPanel>
+                                                    
+                                                    <Button Name="FinishDraftBtn" 
+                                                            Content="✅ Finish Draft" 
+                                                            Classes="lol-primary"
+                                                            Width="140"
+                                                            Height="35"
+                                                            Margin="0,10,0,0"
+                                                            Click="FinishDraft_Click"/>
+                                                </StackPanel>
+                                                
+                                                <!-- Teams Preview -->
+                                                <StackPanel Grid.Column="2">
+                                                    <TextBlock Text="Teams Status" 
+                                                               Foreground="#F0E6D2" 
+                                                               FontWeight="Bold"
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"
+                                                               Margin="0,0,0,10"/>
+                                                    <Border Background="#0F1419" BorderBrush="#C89B3C" BorderThickness="1" CornerRadius="5" Padding="10">
+                                                        <StackPanel Spacing="8">
+                                                            <TextBlock Name="BlueTeamCount" 
+                                                                       Text="🛡️ Blue: 1/5 players"
+                                                                       Foreground="#60a5fa" 
+                                                                       FontSize="12"
+                                                                       FontWeight="Bold"/>
+                                                            <TextBlock Name="RedTeamCount" 
+                                                                       Text="⚔️ Red: 1/5 players"
+                                                                       Foreground="#f87171" 
+                                                                       FontSize="12"
+                                                                       FontWeight="Bold"/>
+                                                            <TextBlock Name="RemainingCount" 
+                                                                       Text="📋 Remaining: 8 players"
+                                                                       Foreground="#C89B3C" 
+                                                                       FontSize="12"
+                                                                       FontWeight="Bold"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </StackPanel>
+                                            </Grid>
+                                            
+                                            <!-- Role Assignment Panel -->
+                                            <Border Name="CaptainRolePanel" Background="#0F1419" BorderBrush="#C89B3C" BorderThickness="1" CornerRadius="5" Padding="10" IsVisible="False">
+                                                <StackPanel Spacing="10">
+                                                    <TextBlock Text="Step 3: Assign Roles" 
+                                                               Foreground="#C89B3C" 
+                                                               FontWeight="Bold"
+                                                               FontSize="14"
+                                                               HorizontalAlignment="Center"/>
+                                                    <TextBlock Text="All players assigned! Now assign roles to each team." 
+                                                               Foreground="#F0E6D2" 
+                                                               FontSize="12"
+                                                               HorizontalAlignment="Center"/>
+                                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="15">
+                                                        <Button Name="CaptainAssignRolesBtn" 
+                                                                Content="🎲 Random Roles" 
+                                                                Classes="lol-secondary"
+                                                                Click="AssignRandomRoles_Click"/>
+                                                        <Button Name="ManualRoleAssignBtn" 
+                                                                Content="✋ Manual Roles" 
+                                                                Classes="lol-secondary"
+                                                                Click="ShowManualRoles_Click"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+
+                                <!-- Wheel Mode Controls -->
+                                <StackPanel Name="WheelControls" IsVisible="False" Spacing="15">
+                                    <TextBlock Text="🎡 Wheel Spinner Setup" 
+                                               FontSize="16" FontWeight="Bold" 
+                                               Foreground="#C89B3C" 
+                                               HorizontalAlignment="Center"/>
+                                    
+                                    <Button Name="StartWheelBtn" 
+                                            Content="🎡 Start Wheel Draft" 
+                                            Classes="lol-primary"
+                                            FontSize="16"
+                                            Padding="25,12"
+                                            HorizontalAlignment="Center"
+                                            Click="StartWheel_Click"/>
+                                </StackPanel>
+
+                                <!-- Universal Controls -->
+                                <StackPanel Orientation="Horizontal" Spacing="15" HorizontalAlignment="Center">
+                                    <Button Name="ClearTeamsBtn" 
+                                            Content="🔄 Clear All" 
+                                            Classes="lol-secondary"
+                                            FontSize="14"
+                                            Click="ClearTeams_Click"/>
+                                    
+                                    <!-- Role Management Panel (appears after teams are formed) -->
+                                    <Button Name="ManageRolesBtn" 
+                                            Content="⚔️ Manage Roles" 
+                                            Classes="lol-secondary"
+                                            FontSize="14"
+                                            Click="ShowRoleManagement_Click"
+                                            IsVisible="False"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Teams Display -->
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Blue Team -->
+                            <Border Grid.Column="0" 
+                                    Background="#1e3a8a" 
+                                    BorderBrush="#3b82f6" 
+                                    BorderThickness="3"
+                                    CornerRadius="10">
+                                <StackPanel Margin="20">
+                                    <TextBlock Text="🛡️ BLUE TEAM" 
+                                               Foreground="#dbeafe" 
+                                               FontSize="20" 
+                                               FontWeight="Bold" 
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,20"/>
+                                    
+                                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl Name="BlueTeamList" ItemsSource="{Binding BlueTeam}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#2563eb" 
+                                                            BorderBrush="#60a5fa"
+                                                            BorderThickness="2"
+                                                            Margin="0,5" 
+                                                            Padding="15,10"
+                                                            CornerRadius="8">
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Name}" 
+                                                                       Foreground="White" 
+                                                                       FontWeight="Bold"
+                                                                       FontSize="14"
+                                                                       HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding Role, StringFormat='Role: {0}'}" 
+                                                                       Foreground="#CDBE91" 
+                                                                       FontSize="12"
+                                                                       HorizontalAlignment="Center"
+                                                                       IsVisible="{Binding Role, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Center Column: VS or Wheel -->
+                            <StackPanel Grid.Column="1" Width="200" Margin="20,0">
+                                <!-- VS Display (default) -->
+                                <StackPanel Name="VSDisplay" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <TextBlock Text="VS" 
+                                               FontSize="24" 
+                                               FontWeight="Bold" 
+                                               Foreground="#C89B3C"
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="⚔️" 
+                                               FontSize="30" 
+                                               HorizontalAlignment="Center"
+                                               Foreground="#C89B3C"/>
+                                </StackPanel>
+                                
+                            </StackPanel>
+
+                            <!-- Red Team -->
+                            <Border Grid.Column="2" 
+                                    Background="#991b1b" 
+                                    BorderBrush="#dc2626" 
+                                    BorderThickness="3"
+                                    CornerRadius="10">
+                                <StackPanel Margin="20">
+                                    <TextBlock Text="⚔️ RED TEAM" 
+                                               Foreground="#fecaca" 
+                                               FontSize="20" 
+                                               FontWeight="Bold" 
+                                               HorizontalAlignment="Center"
+                                               Margin="0,0,0,20"/>
+                                    
+                                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                                        <ItemsControl Name="RedTeamList" ItemsSource="{Binding RedTeam}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#dc2626" 
+                                                            BorderBrush="#f87171"
+                                                            BorderThickness="2"
+                                                            Margin="0,5" 
+                                                            Padding="15,10"
+                                                            CornerRadius="8">
+                                                        <StackPanel>
+                                                            <TextBlock Text="{Binding Name}" 
+                                                                       Foreground="White" 
+                                                                       FontWeight="Bold"
+                                                                       FontSize="14"
+                                                                       HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding Role, StringFormat='Role: {0}'}" 
+                                                                       Foreground="#463714" 
+                                                                       FontSize="12"
+                                                                       HorizontalAlignment="Center"
+                                                                       IsVisible="{Binding Role, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- Champions and Stats Tab -->
+            <TabItem Header="🏆 Champions &amp; Stats" Name="ChampionsTab" IsVisible="False">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Border Background="#0F1419" Padding="25">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Header -->
+                            <Border Grid.Row="0" Background="#1E2328" BorderBrush="#C89B3C" BorderThickness="2" 
+                                    CornerRadius="8" Padding="20" Margin="0,0,0,20">
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="🏆 Champions &amp; OP.GG Stats" 
+                                               FontSize="24" FontWeight="Bold" 
+                                               Foreground="#C89B3C" 
+                                               HorizontalAlignment="Center"/>
+                                    <TextBlock Text="Set champions and OP.GG ranks for each player" 
+                                               FontSize="14" 
+                                               Foreground="#F0E6D2" 
+                                               HorizontalAlignment="Center"/>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Teams with Champion Selection -->
+                            <Grid Grid.Row="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="80"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Blue Team Champions -->
+                                <Border Grid.Column="0" 
+                                        Background="#1e3a8a" 
+                                        BorderBrush="#3b82f6" 
+                                        BorderThickness="3"
+                                        CornerRadius="10"
+                                        Margin="0,0,10,0">
+                                    <StackPanel Margin="15">
+                                        <TextBlock Text="🛡️ BLUE TEAM" 
+                                                   Foreground="White" 
+                                                   FontSize="16" 
+                                                   FontWeight="Bold" 
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,0,0,15"/>
+                                        
+                                        <ItemsControl Name="BlueTeamChampions" ItemsSource="{Binding BlueTeam}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#2563eb" 
+                                                            BorderBrush="#60a5fa"
+                                                            BorderThickness="1"
+                                                            Margin="0,3" 
+                                                            Padding="10"
+                                                            CornerRadius="5">
+                                                        <StackPanel Spacing="5">
+                                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                <TextBlock Text="{Binding Name}" 
+                                                                           Foreground="White" 
+                                                                           FontWeight="Bold"
+                                                                           FontSize="12"/>
+                                                                <TextBlock Text="{Binding Role, StringFormat='({0})'}" 
+                                                                           Foreground="#93c5fd" 
+                                                                           FontSize="10"
+                                                                           IsVisible="{Binding Role, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                                            </StackPanel>
+                                                            
+                                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                <TextBox Watermark="Champion..." 
+                                                                         Width="80"
+                                                                         Height="20"
+                                                                         Background="#1e40af"
+                                                                         Foreground="White"
+                                                                         BorderBrush="#60a5fa"
+                                                                         FontSize="10"/>
+                                                                <ComboBox Width="60" Height="20" FontSize="9">
+                                                                    <ComboBoxItem>Iron</ComboBoxItem>
+                                                                    <ComboBoxItem>Bronze</ComboBoxItem>
+                                                                    <ComboBoxItem>Silver</ComboBoxItem>
+                                                                    <ComboBoxItem>Gold</ComboBoxItem>
+                                                                    <ComboBoxItem>Plat</ComboBoxItem>
+                                                                    <ComboBoxItem>Emerald</ComboBoxItem>
+                                                                    <ComboBoxItem>Diamond</ComboBoxItem>
+                                                                    <ComboBoxItem>Master</ComboBoxItem>
+                                                                    <ComboBoxItem>GM</ComboBoxItem>
+                                                                    <ComboBoxItem>Chall</ComboBoxItem>
+                                                                </ComboBox>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- VS Separator -->
+                                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                    <Border Background="#C89B3C" CornerRadius="25" Width="50" Height="50">
+                                        <TextBlock Text="VS" 
+                                                   Foreground="#0F1419" 
+                                                   FontSize="16" 
+                                                   FontWeight="Bold" 
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                    
+                                    <!-- Start Game Button -->
+                                    <Button Name="StartGameBtn" 
+                                            Content="🎮 Start Game" 
+                                            Classes="lol-primary"
+                                            FontSize="12"
+                                            Padding="20,8"
+                                            Margin="0,15,0,0"
+                                            HorizontalAlignment="Center"
+                                            Click="StartGame_Click"/>
+                                </StackPanel>
+
+                                <!-- Red Team Champions -->
+                                <Border Grid.Column="2" 
+                                        Background="#991b1b" 
+                                        BorderBrush="#dc2626" 
+                                        BorderThickness="3"
+                                        CornerRadius="10"
+                                        Margin="10,0,0,0">
+                                    <StackPanel Margin="15">
+                                        <TextBlock Text="⚔️ RED TEAM" 
+                                                   Foreground="White" 
+                                                   FontSize="16" 
+                                                   FontWeight="Bold" 
+                                                   HorizontalAlignment="Center"
+                                                   Margin="0,0,0,15"/>
+                                        
+                                        <ItemsControl Name="RedTeamChampions" ItemsSource="{Binding RedTeam}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Background="#dc2626" 
+                                                            BorderBrush="#f87171"
+                                                            BorderThickness="1"
+                                                            Margin="0,3" 
+                                                            Padding="10"
+                                                            CornerRadius="5">
+                                                        <StackPanel Spacing="5">
+                                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                <TextBlock Text="{Binding Name}" 
+                                                                           Foreground="White" 
+                                                                           FontWeight="Bold"
+                                                                           FontSize="12"/>
+                                                                <TextBlock Text="{Binding Role, StringFormat='({0})'}" 
+                                                                           Foreground="#fca5a5" 
+                                                                           FontSize="10"
+                                                                           IsVisible="{Binding Role, Converter={x:Static ObjectConverters.IsNotNull}}"/>
+                                                            </StackPanel>
+                                                            
+                                                            <StackPanel Orientation="Horizontal" Spacing="5">
+                                                                <TextBox Watermark="Champion..." 
+                                                                         Width="80"
+                                                                         Height="20"
+                                                                         Background="#b91c1c"
+                                                                         Foreground="White"
+                                                                         BorderBrush="#f87171"
+                                                                         FontSize="10"/>
+                                                                <ComboBox Width="60" Height="20" FontSize="9">
+                                                                    <ComboBoxItem>Iron</ComboBoxItem>
+                                                                    <ComboBoxItem>Bronze</ComboBoxItem>
+                                                                    <ComboBoxItem>Silver</ComboBoxItem>
+                                                                    <ComboBoxItem>Gold</ComboBoxItem>
+                                                                    <ComboBoxItem>Plat</ComboBoxItem>
+                                                                    <ComboBoxItem>Emerald</ComboBoxItem>
+                                                                    <ComboBoxItem>Diamond</ComboBoxItem>
+                                                                    <ComboBoxItem>Master</ComboBoxItem>
+                                                                    <ComboBoxItem>GM</ComboBoxItem>
+                                                                    <ComboBoxItem>Chall</ComboBoxItem>
+                                                                </ComboBox>
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ARAM Tab -->
+            <TabItem Header="🎲 ARAM">
+                <Border Background="#0F1419" Padding="25">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="30">
+                        <TextBlock Text="🎲 ARAM Mode" 
+                                   FontSize="32" 
+                                   FontWeight="Bold" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="#C89B3C"/>
+                        
+                        <TextBlock Text="All Random All Mid - Flexible team sizes" 
+                                   FontSize="16" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="#F0E6D2"/>
+                        
+                        <Button Name="StartAramBtn" 
+                                Content="🎮 Start ARAM Game" 
+                                Classes="lol-primary"
+                                FontSize="18"
+                                Padding="40,20"
+                                Click="StartAram_Click"/>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+            <!-- History Tab -->
+            <TabItem Header="📋 History">
+                <Border Background="#0F1419" Padding="25">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="30">
+                        <TextBlock Text="📋 Match History" 
+                                   FontSize="32" 
+                                   FontWeight="Bold" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="#C89B3C"/>
+                        
+                        <TextBlock Text="Feature coming soon..." 
+                                   FontSize="18" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="#F0E6D2"/>
+                        
+                        <TextBlock Text="Track your custom games and statistics" 
+                                   FontSize="14" 
+                                   HorizontalAlignment="Center"
+                                   Foreground="#C8AA6E"/>
+                    </StackPanel>
+                </Border>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>
