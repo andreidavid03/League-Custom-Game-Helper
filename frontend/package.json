@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "tauri": "tauri"
   },
   "dependencies": {
     "framer-motion": "^12.23.22",
@@ -14,11 +15,13 @@
     "next": "14.2.15",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "styled-jsx": "^5.1.6"
+    "styled-jsx": "^5.1.6",
+    "zustand": "^5.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@tauri-apps/cli": "^2.11.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

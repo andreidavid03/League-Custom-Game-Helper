@@ -1,266 +1,97 @@
-# 🎮 LoL Custom Game Helper by David Demon
+# ⚔️ LoL Custom Game Helper
 
-A modern, professional web application for organizing League of Legends custom games with style and efficiency.
+The fun way to organize **League of Legends custom 5v5 games** with friends. One person hosts, adds everyone to the roster, and lets fate build the teams — with style.
 
 ![LoL Custom Game Helper](./Assets/icon-128.png)
 
-## ✨ Features
+**Local-first**: everything is stored on your device. No accounts, no server, works offline. Export/import your data as JSON whenever you want.
 
-### 🎨 Visual Design
-- **Custom LoL-themed Icon**: Professional icon with crossed swords design
-- **League of Legends Color Scheme**: Authentic gold and blue styling
-- **Responsive Interface**: Clean, modern UI that scales properly
+## 🎲 Seven ways to build teams
 
-### 🎮 Game Features
-- 🎡 **Interactive Wheel Spinner** - Professional wheel animation for team selection
-- 👑 **Captain Draft Mode** - Strategic team building with captain picks
-- 🎲 **Random Team Generator** - Fair and balanced team creation
+| Mode | What happens |
+|---|---|
+| 🎡 **Wheel of Fate** | Spin the wheel — each spin sends a summoner to a team |
+| 📦 **Case Opening** | CS:GO-style unboxing, sound included |
+| 🎰 **Slot Machine** | Pull the lever, the reel decides |
+| 🃏 **Card Draw** | Flip face-down cards to reveal who you drew |
+| 👑 **Captain Draft** | Two captains, coin flip, snake-order picks |
+| ⚖️ **Balanced Teams** | Fair teams weighted by player rank |
+| ⚡ **Instant Random** | No ceremony, teams right now |
 
-- 🏹 **Role Assignment** - Automatic role distribution (Top, Jungle, Mid, ADC, Support)### �🎮 Game Modes
+Plus, for any mode:
 
-- 📊 **Match History** - Track and analyze your custom games- **5v5 Custom**: Complete Summoner's Rift experience with roles
+- 🏹 **Role assignment** — Top / Jungle / Mid / ADC / Support, optionally respecting each player's preferred roles
+- 🧙 **Random champions** — ARAM-style with 2 rerolls per player, live champion data and icons from Riot's free [Data Dragon](https://developer.riotgames.com/docs/lol#data-dragon) (no API key needed)
+- 📋 **Copy for Discord** — paste the teams straight into your lobby chat
+- 📜 **Match history & stats** — win rates, role distribution, most frequent teammates, blue/red side win split
 
-- 🎨 **Modern UI** - Clean, responsive design with LoL theming- **ARAM**: All Random All Mid for maximum chaos
+## 🏁 Quick start (web)
 
-- 🔊 **Sound Effects** - Immersive audio feedback
-
-- 📱 **Mobile Friendly** - Works perfectly on all devices### ⚙️ Game Settings
-
-- **Random Teams**: Automatically form teams
-
-- **Random Roles**: Randomly assign roles (Top, Jungle, Mid, ADC, Support)
-- **Random Champions**: Randomly select champions for each player
-
-### 🎯 Selection Methods
-- **Random**: Complete automatic selection
-- **Wheel Spinner**: Interactive spinning wheel for selections
-- **Captain Draft**: Two captains pick teams alternately
-
-### 👥 Player Management
-- Add/remove players from roster
-- Manage active player list
-- Flexible selection for each game
-
-### 📊 Match History
-- Save game results
-- Detailed per-player statistics
-- History of champions and roles played
-
-## 🚀 Tech Stack
-
-### Frontend
-- **Next.js 14** with TypeScript
-- **React 18** with modern hooks
-- **Tailwind CSS** for modern styling
-- **Framer Motion** for smooth animations
-- **React Query** for state management
-
-### Backend
-- **Node.js** with TypeScript
-- **Express.js** for API routes
-- **SQLite** with Drizzle ORM
-- **Real-time updates** for live features
-
-## 🏁 Quick Start
-
-### Prerequisites
-- Node.js 18+
-- npm or yarn
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd "LoL Custom Game Heper by David Demon"
-   ```
-
-2. **Install all dependencies**
-   ```bash
-   npm run install:all
-   ```
-
-3. **Start development servers**
-   ```bash
-   npm run dev
-   ```
-
-4. **Open your browser**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:3001
-
-### Alternative: Use the startup script
-
-For a guided setup experience:
-```bash
-./start-app.sh
-```
-
-This script will:
-- Install all dependencies
-- Start both frontend and backend servers
-- Open your browser automatically
-
-## 🎮 How to Use
-
-1. **Add Players** - Enter player names to build your player pool
-
-2. **Select Game Mode**:
-   - **Wheel Mode**: Spin the wheel for dramatic team selection
-   - **Captain Mode**: Choose captains who draft their teams
-   - **Random Mode**: Instant balanced team generation
-
-3. **Assign Roles** - Automatic or manual role distribution
-
-4. **Start Playing** - Teams are ready for your custom game!
-
-## 🔧 Development
-
-### Frontend Development
 ```bash
 cd frontend
+npm install
 npm run dev
 ```
 
-### Backend Development
-```bash
-cd backend
-npm run dev
-```
+Open http://localhost:3000. That's it — there is no backend to run.
 
-### Database Management
-```bash
-cd backend
-npm run db:push    # Push schema changes
-npm run db:studio  # Open database browser
-```
-
-## 📦 Building for Production
+### Production build
 
 ```bash
-npm run build
-npm run start
+cd frontend && npm run build
 ```
 
-## � Cloud Deployment
+This produces a fully static site in `frontend/out/` — host it on **GitHub Pages, Vercel, Netlify, or any static file server**. Share the URL with friends; their data stays on their own devices.
 
-Deploy your app to the cloud so friends can access it from anywhere!
+## 📱 Mobile (PWA)
 
-### Quick Deploy Guide
+The app is an installable Progressive Web App:
+
+1. Open the deployed URL on your phone
+2. **Add to Home Screen** (Safari share menu / Chrome ⋮ menu)
+3. It launches full-screen and works offline
+
+## 🖥️ Desktop app (Tauri)
+
+The repo ships a [Tauri](https://tauri.app) scaffold for native Mac/Windows/Linux builds (~10 MB):
+
 ```bash
-./deploy-guide.sh
+# one-time: install Rust from https://rustup.rs
+cd frontend
+npm run tauri dev     # run as a desktop app
+npm run tauri build   # produce installers
 ```
 
-### Recommended Platforms
+## 🚀 Tech stack
 
-#### 1. **Vercel** (Easiest for Next.js)
-- ✅ **FREE** for personal projects
-- ✅ Automatic deployments from GitHub
-- ✅ Perfect for Next.js apps
+- **Next.js 14** (static export) + **TypeScript** + **React 18**
+- **Tailwind CSS 4** — custom Hextech design system
+- **Framer Motion** — animations
+- **Zustand** (persisted) — local-first storage
+- **Tauri 2** — desktop builds
 
-1. Sign up at [vercel.com](https://vercel.com)
-2. Connect your GitHub repository
-3. Import this project
-4. Deploy with one click!
+```
+frontend/src/
+├── app/              # Next.js shell + Hextech theme
+├── lib/              # types, store, team logic, Data Dragon, sounds
+└── components/
+    ├── tabs/         # Play, Players, History, Stats, Settings
+    ├── modes/        # the seven randomizer rituals
+    └── ui.tsx        # Hextech UI primitives
+```
 
-#### 2. **Railway** (Best for Full-Stack)
-- ✅ **FREE** $5/month credit
-- ✅ Includes database hosting
-- ✅ Auto-deploy from GitHub
+> The `backend/` folder contains the old Hono/SQLite API. It is **not used** by the app anymore — it's parked for a future online mode (accounts, shared rooms, live spectating).
 
-1. Sign up at [railway.app](https://railway.app)
-2. Create new project from GitHub
-3. Select this repository
-4. Railway reads `railway.yaml` automatically
+## 🗺️ Roadmap
 
-#### 3. **Render** (Great Alternative)
-- ✅ **FREE** tier available
-- ✅ Easy configuration
-- ✅ Supports multiple services
-
-1. Sign up at [render.com](https://render.com)
-2. Create Blueprint from GitHub
-3. Render reads `render.yaml` automatically
-
-### After Deployment
-Share the deployed URL with your friends - they can access the app from any device with an internet connection!
-
-## �🎨 Customization
-
-### Adding New Champions
-Edit `backend/src/data/champions.json` to add or modify champions.
-
-### Styling
-The project uses Tailwind CSS. Customize colors and styling in:
-- `frontend/tailwind.config.ts`
-- `frontend/src/app/globals.css`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+- [ ] Shared rooms — everyone watches the wheel spin from their own phone
+- [ ] Accounts & cloud sync
+- [ ] Riot API integration for automatic rank lookup
+- [ ] Tournament brackets
+- [ ] Discord bot
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+MIT — made with ❤️ by **David Demon** for LoL game nights.
 
-## 🙏 Acknowledgments
-
-- Riot Games for League of Legends
-- The React and Next.js communities
-- All contributors and testers
-
----
-
-**Made with ❤️ for the League of Legends community**
-
-- All contributors and testers- **LoL Color Palette**: Gold (#C89B3C) and dark blue (#010A13)
-
-- **Multiple Formats**: SVG source, PNG for display, various sizes
-
-## 📞 Support- **Professional Look**: Appears in taskbar, window title, and app header
-
-
-
-For support, email support@example.com or join our Discord server.## How to Use
-
-
-
----1. **Add Players**: Navigate to the Players section and add your friends
-
-2. **Choose Game Mode**: Select 5v5 or ARAM
-
-**Made with ❤️ by David Demon** | *Elevating custom games to the next level*3. **Configure Settings**: Choose what you want to randomize
-4. **Select Method**: Random, Wheel, or Captain Draft
-5. **Select Players**: Check who participates in the game
-6. **Start Game**: Generate teams and enjoy the game!
-
-## Future Features
-
-- [ ] Advanced per-player statistics
-- [ ] Export results to CSV/Excel
-- [ ] Riot API integration for champion data
-- [ ] Tournament mode with bracket
-- [ ] Internal rating system
-- [ ] Discord bot integration
-
-## League of Legends Design
-
-The application uses the official LoL color palette:
-- **Gold Primary**: #C89B3C
-- **Blue Team**: #0F2027  
-- **Red Team**: #2C1810
-- **Dark Background**: #010A13
-- **Accent**: #F0E6D2
-
-## Contributing
-
-Created with ❤️ by David Demon for LoL friends!
-
-For bug reports or feature requests, create an issue in the repository.
-
-## License
-
-This project is intended for personal and educational use. League of Legends is a registered trademark of Riot Games.
+League of Legends is a registered trademark of Riot Games. This is a fan project; champion data and images are served from Riot's public Data Dragon CDN.

@@ -1,26 +1,100 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Hextech palette */
+  --color-abyss: #010a13;
+  --color-deep: #091428;
+  --color-panel: #0a1428;
+  --color-panel-light: #0f2138;
+  --color-gold: #c89b3c;
+  --color-gold-light: #f0e6d2;
+  --color-gold-dark: #785a28;
+  --color-teal: #0ac8b9;
+  --color-hexblue: #0397ab;
+  --color-team-blue: #2ea3e8;
+  --color-team-red: #e84057;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --font-display: var(--font-cinzel), serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-glow-pulse: glow-pulse 2s ease-in-out infinite;
+  --animate-float-up: float-up 0.5s ease-out both;
+
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 6px rgba(200, 155, 60, 0.35); }
+    50% { box-shadow: 0 0 18px rgba(200, 155, 60, 0.7); }
+  }
+  @keyframes float-up {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }
 
+html {
+  background: #010a13;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: #f0e6d2;
+  font-family: var(--font-sans);
+  background:
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(3, 151, 171, 0.18), transparent),
+    radial-gradient(ellipse 60% 40% at 85% 110%, rgba(200, 155, 60, 0.08), transparent),
+    #010a13;
+  min-height: 100vh;
+}
+
+/* Hextech panel: gold-edged card with clipped corners */
+.hex-panel {
+  position: relative;
+  background: linear-gradient(160deg, #0f2138 0%, #0a1428 55%, #091022 100%);
+  border: 1px solid #785a28;
+  clip-path: polygon(
+    12px 0, calc(100% - 12px) 0, 100% 12px,
+    100% calc(100% - 12px), calc(100% - 12px) 100%,
+    12px 100%, 0 calc(100% - 12px), 0 12px
+  );
+}
+
+.hex-panel-glow {
+  box-shadow: 0 0 24px rgba(200, 155, 60, 0.12), inset 0 0 32px rgba(3, 151, 171, 0.05);
+}
+
+/* Gold divider line that fades at the edges */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c89b3c 20%, #c89b3c 80%, transparent);
+}
+
+/* Shimmering gold text for big headings */
+.gold-shimmer {
+  background: linear-gradient(90deg, #c89b3c 0%, #f0e6d2 45%, #c89b3c 60%, #c89b3c 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer 4s linear infinite;
+}
+
+/* Scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #785a28 #0a1428;
+}
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-track { background: #0a1428; }
+*::-webkit-scrollbar-thumb { background: #785a28; border-radius: 4px; }
+*::-webkit-scrollbar-thumb:hover { background: #c89b3c; }
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
