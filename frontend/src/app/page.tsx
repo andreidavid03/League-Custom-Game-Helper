@@ -50,7 +50,7 @@ export default function Home() {
                 LoL Custom Game Helper
               </h1>
               <p className="text-[11px] text-gold-light/40 hidden sm:block">
-                by David Demon · everything stays on this device
+                by David Demon
               </p>
             </div>
           </div>

@@ -2,7 +2,7 @@
  * serve from cache with network fallback, refresh cache in background.
  * Paths are relative to the SW script so the app works at any base path
  * (root domain, GitHub Pages subpath, etc.). */
-const CACHE = 'lol-cgh-v1'
+const CACHE = 'lol-cgh-v2'
 const SHELL = ['./', './manifest.webmanifest', './icon-128.png', './icon-192.png', './icon-512.png', './csgo-wheel-sound.mp3']
 
 self.addEventListener('install', (event) => {
