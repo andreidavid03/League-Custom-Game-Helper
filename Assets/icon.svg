@@ -1,44 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background Circle -->
-  <circle cx="128" cy="128" r="120" fill="#010A13" stroke="#C89B3C" stroke-width="8"/>
-  
-  <!-- Inner Ring -->
-  <circle cx="128" cy="128" r="90" fill="none" stroke="#463714" stroke-width="4"/>
-  
-  <!-- Crossed Swords -->
-  <g transform="translate(128,128)">
-    <!-- Sword 1 -->
-    <g transform="rotate(-45)">
-      <rect x="-3" y="-60" width="6" height="120" fill="#C89B3C"/>
-      <polygon points="-8,-70 0,-85 8,-70" fill="#F0E6D2"/>
-      <rect x="-12" y="50" width="24" height="12" fill="#463714"/>
-      <circle cx="0" cy="65" r="8" fill="#C89B3C"/>
-    </g>
-    
-    <!-- Sword 2 -->
-    <g transform="rotate(45)">
-      <rect x="-3" y="-60" width="6" height="120" fill="#C89B3C"/>
-      <polygon points="-8,-70 0,-85 8,-70" fill="#F0E6D2"/>
-      <rect x="-12" y="50" width="24" height="12" fill="#463714"/>
-      <circle cx="0" cy="65" r="8" fill="#C89B3C"/>
-    </g>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#123150"/>
+      <stop offset="55%" stop-color="#0a1c33"/>
+      <stop offset="100%" stop-color="#010a13"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0ac8b9" stop-opacity="0.30"/>
+      <stop offset="70%" stop-color="#0ac8b9" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#0ac8b9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldRim" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0e6d2"/>
+      <stop offset="35%" stop-color="#c89b3c"/>
+      <stop offset="100%" stop-color="#785a28"/>
+    </linearGradient>
+    <linearGradient id="goldPtr" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0e6d2"/>
+      <stop offset="100%" stop-color="#c89b3c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background: rounded square -->
+  <rect x="0" y="0" width="1024" height="1024" rx="190" fill="url(#bg)"/>
+
+  <!-- Hexagon frame -->
+  <path d="M512 52 L909 281 L909 743 L512 972 L115 743 L115 281 Z"
+        fill="none" stroke="#785a28" stroke-width="10"/>
+  <path d="M512 88 L878 299 L878 725 L512 936 L146 725 L146 299 Z"
+        fill="none" stroke="#c89b3c" stroke-width="6" opacity="0.85"/>
+
+  <!-- Teal glow behind the wheel -->
+  <circle cx="512" cy="512" r="430" fill="url(#glow)"/>
+
+  <!-- Wheel: 8 wedges alternating team blue / team red -->
+  <g stroke="#c89b3c" stroke-width="6" stroke-linejoin="round">
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(45 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74" transform="rotate(90 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(135 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74" transform="rotate(180 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(225 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74" transform="rotate(270 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(315 512 512)"/>
   </g>
-  
-  <!-- Central Emblem -->
-  <circle cx="128" cy="128" r="25" fill="#C89B3C"/>
-  <circle cx="128" cy="128" r="18" fill="#010A13"/>
-  <text x="128" y="138" font-family="Arial Black" font-size="20" font-weight="bold" text-anchor="middle" fill="#C89B3C">L</text>
-  
-  <!-- Outer Decorative Elements -->
-  <g transform="translate(128,128)">
-    <circle cx="0" cy="-100" r="6" fill="#C89B3C"/>
-    <circle cx="70" cy="-70" r="4" fill="#F0E6D2"/>
-    <circle cx="100" cy="0" r="6" fill="#C89B3C"/>
-    <circle cx="70" cy="70" r="4" fill="#F0E6D2"/>
-    <circle cx="0" cy="100" r="6" fill="#C89B3C"/>
-    <circle cx="-70" cy="70" r="4" fill="#F0E6D2"/>
-    <circle cx="-100" cy="0" r="6" fill="#C89B3C"/>
-    <circle cx="-70" cy="-70" r="4" fill="#F0E6D2"/>
-  </g>
+
+  <!-- Gold rim -->
+  <circle cx="512" cy="512" r="298" fill="none" stroke="url(#goldRim)" stroke-width="22"/>
+  <circle cx="512" cy="512" r="316" fill="none" stroke="#0ac8b9" stroke-width="3" opacity="0.5"/>
+
+  <!-- Hub -->
+  <circle cx="512" cy="512" r="96" fill="#0a1428" stroke="url(#goldRim)" stroke-width="14"/>
+  <path d="M512 446 L578 512 L512 578 L446 512 Z" fill="#0ac8b9"/>
+  <path d="M512 474 L550 512 L512 550 L474 512 Z" fill="#066e66"/>
+  <path d="M512 446 L578 512 L512 578 L446 512 Z" fill="none" stroke="#f0e6d2" stroke-width="4" opacity="0.7"/>
+
+  <!-- Pointer -->
+  <path d="M455 132 L569 132 L512 252 Z" fill="url(#goldPtr)" stroke="#785a28" stroke-width="8" stroke-linejoin="round"/>
+
+  <!-- Side accent diamonds -->
+  <path d="M148 512 L176 540 L204 512 L176 484 Z" fill="#c89b3c"/>
+  <path d="M820 512 L848 540 L876 512 L848 484 Z" fill="#c89b3c"/>
 </svg>

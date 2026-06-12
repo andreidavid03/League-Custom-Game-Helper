@@ -2,7 +2,7 @@
 
 The fun way to organize **League of Legends custom 5v5 games** with friends. One person hosts, adds everyone to the roster, and lets fate build the teams — with style.
 
-![LoL Custom Game Helper](./Assets/icon-128.png)
+![LoL Custom Game Helper](./Assets/banner.png)
 
 **Local-first**: everything is stored on your device. No accounts, no server, works offline. Export/import your data as JSON whenever you want.
 

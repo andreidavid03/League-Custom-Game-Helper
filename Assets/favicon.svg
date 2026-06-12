@@ -1,27 +1,64 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
-  <!-- Background -->
-  <circle cx="32" cy="32" r="30" fill="#010A13" stroke="#C89B3C" stroke-width="2"/>
-  
-  <!-- Main Shield -->
-  <path d="M32 8 L20 16 L20 32 C20 42 26 50 32 52 C38 50 44 42 44 32 L44 16 Z" fill="#1E2328" stroke="#C89B3C" stroke-width="1.5"/>
-  
-  <!-- Inner Design -->
-  <path d="M32 12 L24 18 L24 30 C24 38 28 44 32 46 C36 44 40 38 40 30 L40 18 Z" fill="#010A13"/>
-  
-  <!-- Crossed Items -->
-  <g transform="translate(32,28)">
-    <!-- Item 1 -->
-    <rect x="-1" y="-8" width="2" height="16" fill="#C89B3C" transform="rotate(-30)"/>
-    <!-- Item 2 -->
-    <rect x="-1" y="-8" width="2" height="16" fill="#C89B3C" transform="rotate(30)"/>
-    <!-- Center gem -->
-    <circle cx="0" cy="0" r="3" fill="#F0E6D2"/>
-    <circle cx="0" cy="0" r="2" fill="#C89B3C"/>
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="42%" r="75%">
+      <stop offset="0%" stop-color="#123150"/>
+      <stop offset="55%" stop-color="#0a1c33"/>
+      <stop offset="100%" stop-color="#010a13"/>
+    </radialGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0ac8b9" stop-opacity="0.30"/>
+      <stop offset="70%" stop-color="#0ac8b9" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#0ac8b9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="goldRim" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0e6d2"/>
+      <stop offset="35%" stop-color="#c89b3c"/>
+      <stop offset="100%" stop-color="#785a28"/>
+    </linearGradient>
+    <linearGradient id="goldPtr" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f0e6d2"/>
+      <stop offset="100%" stop-color="#c89b3c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background: rounded square -->
+  <rect x="0" y="0" width="1024" height="1024" rx="190" fill="url(#bg)"/>
+
+  <!-- Hexagon frame -->
+  <path d="M512 52 L909 281 L909 743 L512 972 L115 743 L115 281 Z"
+        fill="none" stroke="#785a28" stroke-width="10"/>
+  <path d="M512 88 L878 299 L878 725 L512 936 L146 725 L146 299 Z"
+        fill="none" stroke="#c89b3c" stroke-width="6" opacity="0.85"/>
+
+  <!-- Teal glow behind the wheel -->
+  <circle cx="512" cy="512" r="430" fill="url(#glow)"/>
+
+  <!-- Wheel: 8 wedges alternating team blue / team red -->
+  <g stroke="#c89b3c" stroke-width="6" stroke-linejoin="round">
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(45 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74" transform="rotate(90 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(135 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74" transform="rotate(180 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(225 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#1f4e74" transform="rotate(270 512 512)"/>
+    <path d="M512 512 L624.5 240.4 A294 294 0 0 0 399.5 240.4 Z" fill="#5d2331" transform="rotate(315 512 512)"/>
   </g>
-  
-  <!-- Corner decorations -->
-  <circle cx="32" cy="12" r="1.5" fill="#C89B3C"/>
-  <circle cx="20" cy="20" r="1" fill="#F0E6D2"/>
-  <circle cx="44" cy="20" r="1" fill="#F0E6D2"/>
+
+  <!-- Gold rim -->
+  <circle cx="512" cy="512" r="298" fill="none" stroke="url(#goldRim)" stroke-width="22"/>
+  <circle cx="512" cy="512" r="316" fill="none" stroke="#0ac8b9" stroke-width="3" opacity="0.5"/>
+
+  <!-- Hub -->
+  <circle cx="512" cy="512" r="96" fill="#0a1428" stroke="url(#goldRim)" stroke-width="14"/>
+  <path d="M512 446 L578 512 L512 578 L446 512 Z" fill="#0ac8b9"/>
+  <path d="M512 474 L550 512 L512 550 L474 512 Z" fill="#066e66"/>
+  <path d="M512 446 L578 512 L512 578 L446 512 Z" fill="none" stroke="#f0e6d2" stroke-width="4" opacity="0.7"/>
+
+  <!-- Pointer -->
+  <path d="M455 132 L569 132 L512 252 Z" fill="url(#goldPtr)" stroke="#785a28" stroke-width="8" stroke-linejoin="round"/>
+
+  <!-- Side accent diamonds -->
+  <path d="M148 512 L176 540 L204 512 L176 484 Z" fill="#c89b3c"/>
+  <path d="M820 512 L848 540 L876 512 L848 484 Z" fill="#c89b3c"/>
 </svg>
