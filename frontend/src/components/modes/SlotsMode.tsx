@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Player } from '@/lib/types'
 import { playTick, playLockIn } from '@/lib/sound'
 import { HexButton } from '@/components/ui'
-import { ModeShell, TeamsProgress, useAssignment, useAnimSpeed } from './common'
+import { animate, bannerText, ModeShell, TeamsProgress, useAssignment, useAnimSpeed, WinnerBanner } from './common'
 import { pickRandom } from '@/lib/teams'
 import type { ModeProps } from '@/components/tabs/PlayTab'
 
@@ -14,14 +14,14 @@ const WINNER_ROW = 24
 
 export default function SlotsMode({ players, onComplete, onCancel }: ModeProps) {
   const speed = useAnimSpeed()
-  const { remaining, blue, red, nextSide, assign } = useAssignment(players, (b, r) =>
+  const { remaining, blue, red, nextSide, assign, peekNextSide } = useAssignment(players, (b, r) =>
     onComplete({ blue: b, red: r })
   )
   const [reel, setReel] = useState<Player[]>([])
   const [offset, setOffset] = useState(0)
   const [rolling, setRolling] = useState(false)
-  const [winner, setWinner] = useState<Player | null>(null)
-  const rafRef = useRef(0)
+  const [winner, setWinner] = useState<WinnerBanner | null>(null)
+  const cancelRef = useRef<(() => void) | null>(null)
 
   const pull = () => {
     if (rolling || remaining.length === 0) return
@@ -36,31 +36,30 @@ export default function SlotsMode({ players, onComplete, onCancel }: ModeProps) 
     // Land the winner row in the middle of the 3-row window.
     const target = (WINNER_ROW - 1) * ROW_H
     const duration = 2600 / speed
-    const t0 = performance.now()
     let lastRow = 0
 
-    const frame = (now: number) => {
-      const t = Math.min((now - t0) / duration, 1)
-      const eased = 1 - Math.pow(1 - t, 3)
-      const y = target * eased
-      setOffset(y)
-      const row = Math.floor(y / ROW_H)
-      if (row !== lastRow) {
-        playTick(0.8)
-        lastRow = row
-      }
-      if (t < 1) {
-        rafRef.current = requestAnimationFrame(frame)
-      } else {
+    cancelRef.current = animate(
+      duration,
+      (t) => {
+        const eased = 1 - Math.pow(1 - t, 3)
+        const y = target * eased
+        setOffset(y)
+        const row = Math.floor(y / ROW_H)
+        if (row !== lastRow) {
+          playTick(0.8)
+          lastRow = row
+        }
+      },
+      () => {
         playLockIn()
-        setWinner(picked)
+        setWinner({ player: picked, side: peekNextSide() })
         setRolling(false)
         setTimeout(() => {
           const after = assign(picked)
           if (after.remaining.length === 1) {
             const last = after.remaining[0]
             setTimeout(() => {
-              setWinner(last)
+              setWinner({ player: last, side: peekNextSide() })
               playLockIn()
               setTimeout(() => assign(last), 800)
             }, 600)
@@ -71,11 +70,10 @@ export default function SlotsMode({ players, onComplete, onCancel }: ModeProps) 
           }
         }, 1400 / speed)
       }
-    }
-    rafRef.current = requestAnimationFrame(frame)
+    )
   }
 
-  useEffect(() => () => cancelAnimationFrame(rafRef.current), [])
+  useEffect(() => () => cancelRef.current?.(), [])
 
   return (
     <ModeShell title="🎰 Slot Machine" onCancel={onCancel}>
@@ -116,7 +114,7 @@ export default function SlotsMode({ players, onComplete, onCancel }: ModeProps) 
         <div className="h-12 mt-4 text-center">
           {winner ? (
             <p className="font-display text-xl text-gold animate-float-up">
-              💰 {winner.name} → {nextSide === 'BLUE' ? '🔵 Blue' : '🔴 Red'}!
+              💰 {bannerText(winner)}
             </p>
           ) : (
             <HexButton big onClick={pull} disabled={rolling || remaining.length === 0}>

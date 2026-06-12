@@ -20,17 +20,27 @@ export default function RevealMode({
 }: ModeProps & { balanced: boolean; instant?: boolean }) {
   const speed = useAnimSpeed()
   const [phase, setPhase] = useState<'weighing' | 'done'>('weighing')
-  const startedRef = useRef(false)
+  // Compute the split once and keep it across effect re-runs (StrictMode,
+  // parent re-renders); the timers themselves are recreated each run so a
+  // cleanup can never strand the mode mid-"weighing".
+  const resultRef = useRef<{ blue: typeof players; red: typeof players } | null>(null)
+  const completedRef = useRef(false)
 
   useEffect(() => {
-    if (startedRef.current) return
-    startedRef.current = true
+    if (!resultRef.current) {
+      resultRef.current = balanced ? splitBalanced(players) : splitRandom(players)
+    }
+    const result = resultRef.current
 
-    const result = balanced ? splitBalanced(players) : splitRandom(players)
+    const finish = () => {
+      if (completedRef.current) return
+      completedRef.current = true
+      onComplete(result)
+    }
 
     if (instant) {
-      onComplete(result)
-      return
+      const t = setTimeout(finish, 50)
+      return () => clearTimeout(t)
     }
 
     // Suspense: scale ticking while "the scales weigh the teams".
@@ -39,7 +49,7 @@ export default function RevealMode({
     const timer = setTimeout(() => {
       clearInterval(interval)
       setPhase('done')
-      setTimeout(() => onComplete(result), 400)
+      setTimeout(finish, 400)
     }, duration)
 
     return () => {

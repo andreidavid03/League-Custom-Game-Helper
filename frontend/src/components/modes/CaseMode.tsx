@@ -4,24 +4,28 @@ import { useEffect, useRef, useState } from 'react'
 import { Player } from '@/lib/types'
 import { playCaseOpen, stopCaseOpen, playLockIn } from '@/lib/sound'
 import { HexButton } from '@/components/ui'
-import { ModeShell, TeamsProgress, useAssignment, useAnimSpeed } from './common'
+import { animate, bannerText, ModeShell, TeamsProgress, useAssignment, useAnimSpeed, WinnerBanner } from './common'
 import { pickRandom } from '@/lib/teams'
 import type { ModeProps } from '@/components/tabs/PlayTab'
 
-const CARD_W = 128 // px, includes margin
+// Card geometry: these MUST match the inline styles on the strip cards,
+// otherwise the marker lands on the wrong card.
+const CARD_BOX = 112 // visible card width, px
+const CARD_GAP = 8 // total horizontal margin, px
+const CARD_W = CARD_BOX + CARD_GAP
 const WINNER_INDEX = 34
 const STRIP_LEN = 42
 
 export default function CaseMode({ players, onComplete, onCancel }: ModeProps) {
   const speed = useAnimSpeed()
-  const { remaining, blue, red, nextSide, assign } = useAssignment(players, (b, r) =>
+  const { remaining, blue, red, nextSide, assign, peekNextSide } = useAssignment(players, (b, r) =>
     onComplete({ blue: b, red: r })
   )
   const [strip, setStrip] = useState<Player[]>([])
   const [offset, setOffset] = useState(0)
   const [opening, setOpening] = useState(false)
-  const [winner, setWinner] = useState<Player | null>(null)
-  const rafRef = useRef(0)
+  const [winner, setWinner] = useState<WinnerBanner | null>(null)
+  const cancelRef = useRef<(() => void) | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
   const open = () => {
@@ -46,25 +50,24 @@ export default function CaseMode({ players, onComplete, onCancel }: ModeProps) {
     const jitter = (Math.random() - 0.5) * CARD_W * 0.6
     const target = WINNER_INDEX * CARD_W + CARD_W / 2 - containerW / 2 + jitter
     const duration = 5000 / speed
-    const t0 = performance.now()
 
-    const frame = (now: number) => {
-      const t = Math.min((now - t0) / duration, 1)
-      const eased = 1 - Math.pow(1 - t, 4)
-      setOffset(target * eased)
-      if (t < 1) {
-        rafRef.current = requestAnimationFrame(frame)
-      } else {
+    cancelRef.current = animate(
+      duration,
+      (t) => {
+        const eased = 1 - Math.pow(1 - t, 4)
+        setOffset(target * eased)
+      },
+      () => {
         stopCaseOpen()
         playLockIn()
-        setWinner(picked)
+        setWinner({ player: picked, side: peekNextSide() })
         setOpening(false)
         setTimeout(() => {
           const after = assign(picked)
           if (after.remaining.length === 1) {
             const last = after.remaining[0]
             setTimeout(() => {
-              setWinner(last)
+              setWinner({ player: last, side: peekNextSide() })
               playLockIn()
               setTimeout(() => assign(last), 800)
             }, 600)
@@ -75,13 +78,12 @@ export default function CaseMode({ players, onComplete, onCancel }: ModeProps) {
           }
         }, 1500 / speed)
       }
-    }
-    rafRef.current = requestAnimationFrame(frame)
+    )
   }
 
   useEffect(
     () => () => {
-      cancelAnimationFrame(rafRef.current)
+      cancelRef.current?.()
       stopCaseOpen()
     },
     []
@@ -113,7 +115,8 @@ export default function CaseMode({ players, onComplete, onCancel }: ModeProps) {
                 return (
                   <div
                     key={i}
-                    className={`shrink-0 w-28 h-24 mx-1 flex flex-col items-center justify-center border text-center px-1 transition-colors ${
+                    style={{ width: CARD_BOX, marginLeft: CARD_GAP / 2, marginRight: CARD_GAP / 2 }}
+                    className={`shrink-0 h-24 flex flex-col items-center justify-center border rounded-lg text-center px-1 transition-colors ${
                       isWinner
                         ? 'border-gold bg-gold/15 animate-glow-pulse'
                         : 'border-gold-dark/40 bg-abyss/60'
@@ -133,7 +136,7 @@ export default function CaseMode({ players, onComplete, onCancel }: ModeProps) {
         <div className="h-12 mt-4 text-center">
           {winner ? (
             <p className="font-display text-xl text-gold animate-float-up">
-              🌟 {winner.name} unboxed → {nextSide === 'BLUE' ? '🔵 Blue' : '🔴 Red'}!
+              🌟 {bannerText(winner)}
             </p>
           ) : (
             <HexButton big onClick={open} disabled={opening || remaining.length === 0}>

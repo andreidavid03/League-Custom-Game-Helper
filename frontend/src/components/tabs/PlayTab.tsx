@@ -7,7 +7,7 @@ import { GameMode, MODE_LABELS, Match, MatchPlayer, Player, TeamSide } from '@/l
 import { assignRoles, matchToText, toMatchPlayers, shuffle } from '@/lib/teams'
 import { getChampions, championIconUrl, Champion } from '@/lib/ddragon'
 import { playFanfare } from '@/lib/sound'
-import { HexButton, HexPanel, SectionTitle, EmptyState, RankBadge, TeamCard } from '@/components/ui'
+import { Avatar, HexButton, HexPanel, SectionTitle, EmptyState, RankBadge, TeamCard } from '@/components/ui'
 import WheelMode from '@/components/modes/WheelMode'
 import CaseMode from '@/components/modes/CaseMode'
 import SlotsMode from '@/components/modes/SlotsMode'
@@ -189,8 +189,12 @@ export default function PlayTab({ onGoToPlayers }: { onGoToPlayers: () => void }
                         on ? 'border-gold animate-glow-pulse' : 'opacity-60 hover:opacity-100'
                       }`}
                     >
-                      <p className="font-medium text-gold-light truncate">{on ? '✅ ' : ''}{p.name}</p>
-                      <div className="mt-1">
+                      <div className="flex items-center gap-2">
+                        <Avatar name={p.name} src={p.avatarUrl} size={30} />
+                        <p className="font-medium text-gold-light truncate flex-1">{p.name}</p>
+                        {on && <span>✅</span>}
+                      </div>
+                      <div className="mt-1.5">
                         <RankBadge rank={p.rank} />
                       </div>
                     </button>

@@ -2,6 +2,7 @@
 
 import { ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAppStore } from '@/lib/store'
 import {
   Rank,
   RANK_COLORS,
@@ -161,8 +162,19 @@ export function EmptyState({
   )
 }
 
-/** Deterministic gradient avatar from a player name. */
-export function Avatar({ name, size = 28 }: { name: string; size?: number }) {
+/** Player avatar: photo when set, deterministic gradient initials otherwise. */
+export function Avatar({ name, src, size = 28 }: { name: string; src?: string; size?: number }) {
+  if (src) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={src}
+        alt={name}
+        className="rounded-full object-cover shrink-0 border border-white/15 shadow-[0_2px_6px_rgba(0,0,0,0.4)]"
+        style={{ width: size, height: size }}
+      />
+    )
+  }
   let hash = 0
   for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0
   const h1 = hash % 360
@@ -186,6 +198,12 @@ export function Avatar({ name, size = 28 }: { name: string; size?: number }) {
       {initials}
     </span>
   )
+}
+
+/** Look up a roster player's photo by id (players may have been deleted). */
+export function useAvatarLookup(): (playerId: string) => string | undefined {
+  const players = useAppStore((s) => s.players)
+  return (playerId) => players.find((p) => p.id === playerId)?.avatarUrl
 }
 
 export function RankBadge({ rank }: { rank: Rank }) {
@@ -244,6 +262,7 @@ export function TeamCard({
   animate?: boolean
 }) {
   const s = sideStyles[side]
+  const avatarFor = useAvatarLookup()
   return (
     <div className={`hex-panel overflow-hidden border ${s.border}`}>
       <div className={`bg-gradient-to-b ${s.grad} px-4 pt-3 pb-2`}>
@@ -260,7 +279,7 @@ export function TeamCard({
             transition={{ delay: animate ? i * 0.12 : 0, type: 'spring', stiffness: 300, damping: 26 }}
             className="flex items-center gap-2.5 rounded-lg bg-abyss/40 border border-white/[0.05] px-3 py-2"
           >
-            <Avatar name={p.name} size={26} />
+            <Avatar name={p.name} src={avatarFor(p.playerId)} size={26} />
             {p.role && (
               <span className="text-sm" title={ROLE_LABELS[p.role]}>
                 {ROLE_ICONS[p.role]}

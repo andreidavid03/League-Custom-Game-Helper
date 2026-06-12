@@ -10,11 +10,11 @@ export const ROLE_LABELS: Record<Role, string> = {
 }
 
 export const ROLE_ICONS: Record<Role, string> = {
-  TOP: '🛡️',
-  JUNGLE: '🌲',
-  MID: '⚡',
-  ADC: '🏹',
-  SUPPORT: '💎',
+  TOP: '⚔️',
+  JUNGLE: '🐺',
+  MID: '🔮',
+  ADC: '🎯',
+  SUPPORT: '🛡️',
 }
 
 export const RANKS = [
@@ -66,6 +66,8 @@ export interface Player {
   name: string
   rank: Rank
   preferredRoles: Role[]
+  /** Photo as a data URL — lives in localStorage and travels with exports. */
+  avatarUrl?: string
   createdAt: number
 }
 

@@ -1,9 +1,31 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useAppStore } from '@/lib/store'
 import { Player, RANKS, Rank, ROLES, Role } from '@/lib/types'
-import { HexButton, HexPanel, Modal, SectionTitle, EmptyState, RankBadge, RolePill } from '@/components/ui'
+import { Avatar, HexButton, HexPanel, Modal, SectionTitle, EmptyState, RankBadge, RolePill } from '@/components/ui'
+
+/** Resize + center-crop an image file to a small square data URL. */
+async function fileToAvatar(file: File, size = 128): Promise<string> {
+  const url = URL.createObjectURL(file)
+  try {
+    const img = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const el = new Image()
+      el.onload = () => resolve(el)
+      el.onerror = reject
+      el.src = url
+    })
+    const canvas = document.createElement('canvas')
+    canvas.width = size
+    canvas.height = size
+    const ctx = canvas.getContext('2d')!
+    const side = Math.min(img.width, img.height)
+    ctx.drawImage(img, (img.width - side) / 2, (img.height - side) / 2, side, side, 0, 0, size, size)
+    return canvas.toDataURL('image/jpeg', 0.85)
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
 
 export default function PlayersTab() {
   const players = useAppStore((s) => s.players)
@@ -84,13 +106,16 @@ export default function PlayersTab() {
           {sorted.map((p) => (
             <HexPanel key={p.id} className="p-3">
               <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="font-semibold text-gold-light truncate">{p.name}</p>
-                  <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
-                    <RankBadge rank={p.rank} />
-                    {p.preferredRoles.map((r) => (
-                      <RolePill key={r} role={r} />
-                    ))}
+                <div className="min-w-0 flex items-center gap-2.5">
+                  <Avatar name={p.name} src={p.avatarUrl} size={36} />
+                  <div className="min-w-0">
+                    <p className="font-semibold text-gold-light truncate">{p.name}</p>
+                    <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
+                      <RankBadge rank={p.rank} />
+                      {p.preferredRoles.map((r) => (
+                        <RolePill key={r} role={r} />
+                      ))}
+                    </div>
                   </div>
                 </div>
                 <div className="flex gap-1 shrink-0">
@@ -153,17 +178,44 @@ function EditPlayerModal({ player, onClose }: { player: Player; onClose: () => v
   const [name, setName] = useState(player.name)
   const [rank, setRank] = useState<Rank>(player.rank)
   const [roles, setRoles] = useState<Role[]>(player.preferredRoles)
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(player.avatarUrl)
+  const photoRef = useRef<HTMLInputElement>(null)
 
   const toggleRole = (role: Role) =>
     setRoles((rs) => (rs.includes(role) ? rs.filter((r) => r !== role) : [...rs, role]))
 
   const save = () => {
-    updatePlayer(player.id, { name: name.trim() || player.name, rank, preferredRoles: roles })
+    updatePlayer(player.id, { name: name.trim() || player.name, rank, preferredRoles: roles, avatarUrl })
     onClose()
   }
 
   return (
     <Modal open onClose={onClose} title={`Edit ${player.name}`}>
+      <div className="flex items-center gap-4 mb-5">
+        <Avatar name={name || player.name} src={avatarUrl} size={64} />
+        <div className="flex flex-col gap-1.5">
+          <HexButton variant="ghost" onClick={() => photoRef.current?.click()}>
+            📷 {avatarUrl ? 'Change photo' : 'Add photo'}
+          </HexButton>
+          {avatarUrl && (
+            <HexButton variant="danger" onClick={() => setAvatarUrl(undefined)}>
+              Remove photo
+            </HexButton>
+          )}
+        </div>
+        <input
+          ref={photoRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={async (e) => {
+            const f = e.target.files?.[0]
+            if (f) setAvatarUrl(await fileToAvatar(f))
+            e.target.value = ''
+          }}
+        />
+      </div>
+
       <label className="block text-xs uppercase tracking-wider text-gold-light/50 mb-1">Name</label>
       <input
         value={name}
