@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { useAppStore, useHydrated } from '@/lib/store'
 import { setSoundEnabled } from '@/lib/sound'
 import { withBase } from '@/lib/basePath'
@@ -24,11 +25,15 @@ export default function Home() {
   const hydrated = useHydrated()
   const [tab, setTab] = useState<TabId>('play')
   const soundOn = useAppStore((s) => s.settings.soundOn)
-  const playerCount = useAppStore((s) => s.players.length)
+  const theme = useAppStore((s) => s.settings.theme)
 
   useEffect(() => {
     setSoundEnabled(soundOn)
   }, [soundOn])
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = theme || 'HEXTECH'
+  }, [theme])
 
   useEffect(() => {
     // PWA: register the offline service worker (production builds only).
@@ -40,18 +45,20 @@ export default function Home() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="border-b border-gold-dark/40 bg-abyss/60 backdrop-blur-md sticky top-0 z-40">
+      <header className="border-b border-gold-dark/30 bg-abyss/55 backdrop-blur-xl sticky top-0 z-40 shadow-[0_4px_24px_-8px_rgba(0,0,0,0.5)]">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={withBase('/icon-128.png')} alt="" className="w-9 h-9 shrink-0" />
+            <img
+              src={withBase('/icon-128.png')}
+              alt=""
+              className="w-10 h-10 shrink-0 rounded-xl shadow-[0_0_18px_color-mix(in_srgb,var(--c-accent)_35%,transparent)]"
+            />
             <div className="min-w-0">
               <h1 className="font-display font-bold text-lg sm:text-xl gold-shimmer tracking-wide truncate">
                 LoL Custom Game Helper
               </h1>
-              <p className="text-[11px] text-gold-light/40 hidden sm:block">
-                by David Demon
-              </p>
+              <p className="text-[11px] text-gold-light/40 hidden sm:block">by David Demon</p>
             </div>
           </div>
           <nav className="hidden md:flex items-center gap-1">
@@ -88,20 +95,23 @@ export default function Home() {
       </footer>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-abyss/90 backdrop-blur-md border-t border-gold-dark/40 flex">
+      <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-abyss/80 backdrop-blur-xl border-t border-gold-dark/30 flex shadow-[0_-4px_24px_-8px_rgba(0,0,0,0.5)]">
         {TABS.map((t) => (
           <button
             key={t.id}
             onClick={() => setTab(t.id)}
-            className={`flex-1 py-2.5 flex flex-col items-center gap-0.5 text-[10px] uppercase tracking-wider transition-colors ${
-              tab === t.id ? 'text-gold' : 'text-gold-light/40'
+            className={`flex-1 py-2.5 flex flex-col items-center gap-0.5 text-[10px] uppercase tracking-wider transition-all duration-200 ${
+              tab === t.id ? 'text-gold scale-105' : 'text-gold-light/40'
             }`}
           >
-            <span className="text-lg leading-none">{t.icon}</span>
+            <span
+              className={`text-lg leading-none transition-all duration-200 ${
+                tab === t.id ? 'drop-shadow-[0_0_8px_color-mix(in_srgb,var(--c-accent)_60%,transparent)]' : ''
+              }`}
+            >
+              {t.icon}
+            </span>
             {t.label}
-            {t.id === 'players' && playerCount > 0 && (
-              <span className="sr-only">{playerCount} players</span>
-            )}
           </button>
         ))}
       </nav>
@@ -121,14 +131,19 @@ function TabButton({
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 text-sm uppercase tracking-wider font-medium transition-all border-b-2 ${
-        active
-          ? 'text-gold border-gold'
-          : 'text-gold-light/50 border-transparent hover:text-gold-light hover:border-gold-dark'
+      className={`relative px-4 py-2 text-sm uppercase tracking-wider font-medium rounded-lg transition-colors duration-200 ${
+        active ? 'text-gold' : 'text-gold-light/50 hover:text-gold-light hover:bg-white/[0.03]'
       }`}
     >
       <span className="mr-1.5">{t.icon}</span>
       {t.label}
+      {active && (
+        <motion.span
+          layoutId="nav-underline"
+          className="absolute inset-x-3 -bottom-[13px] h-0.5 bg-gold shadow-[0_0_10px_color-mix(in_srgb,var(--c-accent)_80%,transparent)]"
+          transition={{ type: 'spring', stiffness: 420, damping: 32 }}
+        />
+      )}
     </button>
   )
 }

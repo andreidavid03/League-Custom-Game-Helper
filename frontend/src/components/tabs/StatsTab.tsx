@@ -125,9 +125,13 @@ export default function StatsTab() {
 
                 {/* Win-rate bar */}
                 <div className="flex items-center gap-2 w-44">
-                  <div className="flex-1 h-2 bg-abyss border border-gold-dark/40 overflow-hidden">
+                  <div className="flex-1 h-2 rounded-full bg-abyss/80 border border-white/[0.06] overflow-hidden">
                     <div
-                      className={`h-full ${winRate >= 50 ? 'bg-teal' : 'bg-team-red'}`}
+                      className={`h-full rounded-full transition-all duration-700 ${
+                        winRate >= 50
+                          ? 'bg-gradient-to-r from-teal/60 to-teal'
+                          : 'bg-gradient-to-r from-team-red/60 to-team-red'
+                      }`}
                       style={{ width: `${winRate}%` }}
                     />
                   </div>

@@ -2,6 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { useAppStore } from '@/lib/store'
+import { THEMES, THEME_LABELS, THEME_SWATCHES } from '@/lib/types'
 import { HexButton, HexPanel, Modal, SectionTitle } from '@/components/ui'
 
 export default function SettingsTab() {
@@ -46,6 +47,36 @@ export default function SettingsTab() {
   return (
     <div className="animate-float-up max-w-2xl mx-auto">
       <SectionTitle sub="Sounds, pacing, and your data.">Settings</SectionTitle>
+
+      <HexPanel className="p-5 mb-4">
+        <h3 className="font-display text-gold uppercase tracking-wider text-sm mb-3">Theme</h3>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+          {THEMES.map((t) => {
+            const [bg, accent, accent2] = THEME_SWATCHES[t]
+            const active = (settings.theme || 'HEXTECH') === t
+            return (
+              <button
+                key={t}
+                onClick={() => updateSettings({ theme: t })}
+                className={`rounded-xl border p-3 text-center transition-all duration-150 hover:-translate-y-0.5 ${
+                  active
+                    ? 'border-gold shadow-[0_0_16px_color-mix(in_srgb,var(--c-accent)_35%,transparent)]'
+                    : 'border-gold-dark/40 opacity-70 hover:opacity-100'
+                }`}
+                style={{ background: bg }}
+              >
+                <span className="flex justify-center gap-1.5 mb-2">
+                  <span className="w-4 h-4 rounded-full" style={{ background: accent }} />
+                  <span className="w-4 h-4 rounded-full" style={{ background: accent2 }} />
+                </span>
+                <span className="text-[11px] tracking-wide font-medium" style={{ color: accent }}>
+                  {THEME_LABELS[t]}
+                </span>
+              </button>
+            )
+          })}
+        </div>
+      </HexPanel>
 
       <HexPanel className="p-5 mb-4">
         <h3 className="font-display text-gold uppercase tracking-wider text-sm mb-3">Experience</h3>

@@ -110,17 +110,39 @@ export interface Match {
   completedAt?: number
 }
 
+export const THEMES = ['HEXTECH', 'BLOODMOON', 'FRELJORD', 'SHADOWISLES', 'PROJECT'] as const
+export type Theme = (typeof THEMES)[number]
+
+export const THEME_LABELS: Record<Theme, string> = {
+  HEXTECH: 'Hextech',
+  BLOODMOON: 'Blood Moon',
+  FRELJORD: 'Freljord',
+  SHADOWISLES: 'Shadow Isles',
+  PROJECT: 'PROJECT',
+}
+
+/** Swatch colors for the theme picker: [background, accent, accent2]. */
+export const THEME_SWATCHES: Record<Theme, [string, string, string]> = {
+  HEXTECH: ['#0a1428', '#c89b3c', '#0ac8b9'],
+  BLOODMOON: ['#1a0710', '#d8403f', '#ff8a5c'],
+  FRELJORD: ['#071a2e', '#8fd6f7', '#cdeeff'],
+  SHADOWISLES: ['#06231b', '#3ddc97', '#9ef0c9'],
+  PROJECT: ['#0c0c20', '#00e5ff', '#ff3df0'],
+}
+
 export interface Settings {
   soundOn: boolean
   /** 0.5 = slow & dramatic, 1 = normal, 2 = fast */
   animationSpeed: number
   respectPreferredRoles: boolean
+  theme: Theme
 }
 
 export const DEFAULT_SETTINGS: Settings = {
   soundOn: true,
   animationSpeed: 1,
   respectPreferredRoles: true,
+  theme: 'HEXTECH',
 }
 
 export function uid(): string {
