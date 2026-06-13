@@ -3,15 +3,52 @@
 import { ReactNode } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useAppStore } from '@/lib/store'
+import { withBase } from '@/lib/basePath'
 import {
   Rank,
   RANK_COLORS,
   Role,
-  ROLE_ICONS,
   ROLE_LABELS,
   MatchPlayer,
   TeamSide,
 } from '@/lib/types'
+
+/**
+ * Official Riot position icon, bundled locally (Community Dragon mirror) so it
+ * works offline. Rendered as a CSS mask filled with `currentColor`, so it picks
+ * up the active theme's accent instead of Riot's baked-in gold.
+ */
+export function RoleIcon({
+  role,
+  size = 16,
+  className = '',
+}: {
+  role: Role
+  size?: number
+  className?: string
+}) {
+  const url = withBase(`/roles/${role.toLowerCase()}.svg`)
+  return (
+    <span
+      role="img"
+      aria-label={ROLE_LABELS[role]}
+      title={ROLE_LABELS[role]}
+      className={`inline-block bg-current shrink-0 align-middle ${className}`}
+      style={{
+        width: size,
+        height: size,
+        maskImage: `url(${url})`,
+        WebkitMaskImage: `url(${url})`,
+        maskSize: 'contain',
+        WebkitMaskSize: 'contain',
+        maskRepeat: 'no-repeat',
+        WebkitMaskRepeat: 'no-repeat',
+        maskPosition: 'center',
+        WebkitMaskPosition: 'center',
+      }}
+    />
+  )
+}
 
 export function HexPanel({
   children,
@@ -230,7 +267,7 @@ export function RolePill({ role, active = true }: { role: Role; active?: boolean
           : 'text-gold-light/30 border-gold-dark/30'
       }`}
     >
-      {ROLE_ICONS[role]} {ROLE_LABELS[role]}
+      <RoleIcon role={role} size={12} /> {ROLE_LABELS[role]}
     </span>
   )
 }
@@ -280,11 +317,7 @@ export function TeamCard({
             className="flex items-center gap-2.5 rounded-lg bg-abyss/40 border border-white/[0.05] px-3 py-2"
           >
             <Avatar name={p.name} src={avatarFor(p.playerId)} size={26} />
-            {p.role && (
-              <span className="text-sm" title={ROLE_LABELS[p.role]}>
-                {ROLE_ICONS[p.role]}
-              </span>
-            )}
+            {p.role && <RoleIcon role={p.role} size={16} className={s.text} />}
             <span className="flex-1 truncate font-medium text-gold-light text-sm">
               {p.isCaptain && <span title="Captain">👑 </span>}
               {p.name}

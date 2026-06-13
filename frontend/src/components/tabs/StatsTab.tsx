@@ -2,8 +2,8 @@
 
 import { useMemo } from 'react'
 import { useAppStore } from '@/lib/store'
-import { Match, MODE_LABELS, Role, ROLE_ICONS, GameMode } from '@/lib/types'
-import { HexPanel, SectionTitle, EmptyState } from '@/components/ui'
+import { Match, MODE_LABELS, Role, GameMode } from '@/lib/types'
+import { HexPanel, SectionTitle, EmptyState, RoleIcon } from '@/components/ui'
 
 interface PlayerAgg {
   name: string
@@ -144,13 +144,13 @@ export default function StatsTab() {
                   </span>
                 </div>
 
-                <div className="text-xs text-gold-light/50 hidden sm:block w-40 truncate">
+                <div className="text-xs text-gold-light/50 hidden sm:flex items-center gap-1 w-40 truncate">
                   {topRole && (
-                    <span title="Most played role">
-                      {ROLE_ICONS[topRole[0] as Role]} ×{topRole[1]}{' '}
+                    <span className="inline-flex items-center gap-1 text-gold" title="Most played role">
+                      <RoleIcon role={topRole[0] as Role} size={13} /> ×{topRole[1]}
                     </span>
                   )}
-                  {topMate && <span title="Most frequent teammate">· 🤝 {topMate[0]}</span>}
+                  {topMate && <span title="Most frequent teammate" className="truncate">· 🤝 {topMate[0]}</span>}
                 </div>
               </div>
             </HexPanel>
