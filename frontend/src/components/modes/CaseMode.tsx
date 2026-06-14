@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { Player } from '@/lib/types'
 import { playCaseOpen, stopCaseOpen, playLockIn } from '@/lib/sound'
-import { HexButton } from '@/components/ui'
+import { Avatar, HexButton } from '@/components/ui'
 import { animate, bannerText, ModeShell, TeamsProgress, useAssignment, useAnimSpeed, WinnerBanner } from './common'
 import { pickRandom } from '@/lib/teams'
 import type { ModeProps } from '@/components/tabs/PlayTab'
@@ -122,7 +122,12 @@ export default function CaseMode({ players, onComplete, onCancel }: ModeProps) {
                         : 'border-gold-dark/40 bg-abyss/60'
                     }`}
                   >
-                    <span className="text-2xl mb-1">{isWinner ? '🌟' : '🗡️'}</span>
+                    <div className="relative mb-1.5">
+                      <Avatar name={p.name} src={p.avatarUrl} size={44} />
+                      {isWinner && (
+                        <span className="absolute -top-1.5 -right-1.5 text-base drop-shadow">🌟</span>
+                      )}
+                    </div>
                     <span className="text-xs font-medium text-gold-light truncate w-full">
                       {p.name}
                     </span>
